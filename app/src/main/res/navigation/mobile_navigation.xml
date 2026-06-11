@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.generalstoreapp.ui.view.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/billingFragment"
+        android:name="com.example.generalstoreapp.ui.view.BillingFragment"
+        android:label="@string/fragment_billing"
+        tools:layout="@layout/fragment_billing" />
+    <fragment
+        android:id="@+id/billingDetailFragment"
+        android:name="com.example.generalstoreapp.ui.view.BillingDetailFragment"
+        android:label="Billing Details"
+        tools:layout="@layout/fragment_billing_detail" >
+        <argument
+            android:name="billing_id"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.example.generalstoreapp.ui.view.CategoriesFragment"
+        android:label="@string/fragment_categories"
+        tools:layout="@layout/fragment_categories" />
+    <fragment
+        android:id="@+id/customersFragment"
+        android:name="com.example.generalstoreapp.ui.view.CustomersFragment"
+        android:label="@string/fragment_customers"
+        tools:layout="@layout/fragment_customers" />
+    <fragment
+        android:id="@+id/itemsFragment"
+        android:name="com.example.generalstoreapp.ui.view.ItemsFragment"
+        android:label="@string/fragment_items"
+        tools:layout="@layout/fragment_items" />
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.example.generalstoreapp.ui.view.ProductFragment"
+        android:label="@string/fragment_product"
+        tools:layout="@layout/fragment_product" />
+    <fragment
+        android:id="@+id/purchaseFragment"
+        android:name="com.example.generalstoreapp.ui.view.PurchaseFragment"
+        android:label="@string/fragment_purchase"
+        tools:layout="@layout/fragment_purchase" />
+    <fragment
+        android:id="@+id/roleFragment"
+        android:name="com.example.generalstoreapp.ui.view.RoleFragment"
+        android:label="@string/fragment_role"
+        tools:layout="@layout/fragment_role" />
+    <fragment
+        android:id="@+id/salesFragment"
+        android:name="com.example.generalstoreapp.ui.view.SalesFragment"
+        android:label="@string/fragment_sales"
+        tools:layout="@layout/fragment_sales" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.generalstoreapp.ui.view.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/supplierFragment"
+        android:name="com.example.generalstoreapp.ui.view.SupplierFragment"
+        android:label="@string/fragment_supplier"
+        tools:layout="@layout/fragment_supplier" />
+    <fragment
+        android:id="@+id/unitsFragment"
+        android:name="com.example.generalstoreapp.ui.view.UnitsFragment"
+        android:label="@string/fragment_units"
+        tools:layout="@layout/fragment_units" />
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.example.generalstoreapp.ui.view.UsersFragment"
+        android:label="@string/fragment_users"
+        tools:layout="@layout/fragment_users" />
+
+
+</navigation>

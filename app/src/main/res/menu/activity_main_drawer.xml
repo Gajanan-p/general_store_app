@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/outline_home_24"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/categoriesFragment"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/menu_categories" />
+        <item
+            android:id="@+id/unitsFragment"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_units" />
+        <item
+            android:id="@+id/productFragment"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/menu_products" />
+        <item
+            android:id="@+id/billingFragment"
+            android:icon="@drawable/currency_rupee"
+            android:title="@string/menu_billing" />
+        <item
+            android:id="@+id/customersFragment"
+            android:icon="@drawable/admin_users"
+            android:title="@string/menu_customers" />
+        <item
+            android:id="@+id/roleFragment"
+            android:icon="@drawable/admin_users"
+            android:title="@string/menu_roles" />
+        <item
+            android:id="@+id/usersFragment"
+            android:icon="@drawable/admin_users"
+            android:title="@string/menu_users" />
+
+        <item
+            android:id="@+id/supplierFragment"
+            android:icon="@drawable/admin_users"
+            android:title="@string/menu_suppliers" />
+
+        <item
+            android:id="@+id/purchaseFragment"
+            android:icon="@drawable/currency_rupee"
+            android:title="@string/menu_purchases" />
+
+        <item
+            android:id="@+id/salesFragment"
+            android:icon="@drawable/ic_dashboard_24"
+            android:title="@string/menu_sales_reports" />
+        <item
+            android:id="@+id/settingsFragment"
+            android:icon="@drawable/outline_menu_24"
+            android:title="@string/action_settings" />
+    </group>
+
+    <item android:title="@string/menu_account">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/menu_logout" />
+        </menu>
+    </item>
+</menu>

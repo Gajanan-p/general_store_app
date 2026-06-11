@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_items">Add Items</string>
+    <string name="Billing">fragment_billing</string>
+    <string name="symbol">Symbol</string>
+    <string name="added_items">Added Items</string>
+    <string name="add_more_items">+ Add More Items</string>
+    <string name="add_customer">Add Customer</string>
+    <string name="new_units">New Units</string>
+    <string name="view_permissions">View Permissions</string>
+</resources>

@@ -1,0 +1,268 @@
+<resources>
+    <string name="app_name">RajputGeneralStore</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_dashboard">Dashboard</string>
+    <string name="menu_other_menu">Menu</string>
+    <string name="menu_item">Items</string>
+
+    <string name="fragment_role">Roles</string>
+    <string name="fragment_billing">Billing</string>
+    <string name="fragment_users">Users</string>
+    <string name="fragment_categories">Categories</string>
+    <string name="fragment_customers">Customers</string>
+    <string name="fragment_menu">Menu</string>
+    <string name="fragment_stock_reports">Stock Reports</string>
+    <string name="fragment_product">Products</string>
+    <string name="fragment_purchase">Purchase</string>
+    <string name="fragment_stock_adjustments">Stock Adjustments</string>
+    <string name="fragment_supplier">Supplier</string>
+    <string name="fragment_units">Units</string>
+    <string name="fragment_items">Items</string>
+    <string name="fragment_sales">Sales</string>
+
+    <string name="sales">Sales</string>
+    <string name="add_new_sale">Add New Sale</string>
+
+    <!--   Customer list name -->
+    <string name="customer_name">Customer Name</string>
+    <string name="mobile_no">Mobile Number</string>
+    <string name="email">Email:</string>
+    <string name="address">Address</string>
+
+    <!--   Employee list name -->
+    <string name="employee_name">Employee Name</string>
+    <string name="emp_role">Password Role</string>
+
+    <!--   Employee list name -->
+    <string name="product_name">Product Name</string>
+    <string name="product_price">Product Price</string>
+    <string name="product_created_date">Created Date</string>
+
+    <!--	Mobile List -->
+    <string name="brand">Brand Name</string>
+    <string name="by_price">Buy Price</string>
+    <string name="model">Model Name</string>
+    <string name="sale_price">Sale Price</string>
+    <string name="stock_qty">Stock Quantity</string>
+
+    <!--  Repair Detail Screen  -->
+
+    <string name="mobile_model">Mobile Model</string>
+    <string name="issue_des">Issue Description</string>
+    <string name="repair_status">Repair Status</string>
+    <string name="repair_type">Repair Type</string>
+    <string name="total_amt">Total Amt</string>
+    <string name="paid_amt">Paid Amt</string>
+    <string name="pending_amt">Pending Amt</string>
+
+    <!--  Sale Detail Screen:  -->
+    <string name="dt_of_sale">Date of Sale</string>
+
+
+    <!--    menu bar -->
+
+    <string name="menu_search">Search</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_refresh">Refresh</string>
+
+
+    <!--    bottom menu bar-->
+
+
+    <string name="bottom_menu_total">Collection</string>
+    <string name="bottom_menu_admin">Admin</string>
+    <string name="bottom_menu_add">Add Repair</string>
+    <string name="bottom_menu_sale">Sale</string>
+
+    <string name="frame_items">Items</string>
+    <string name="total_collection">Total Collections:</string>
+
+    <string name="Rs">\u20B9</string>
+
+    <!--    Dashboard string names-->
+    <string name="ds1_customer">Customers</string>
+    <string name="ds2_mobile">Mobile</string>
+    <string name="ds3_repair">Repairs</string>
+    <string name="ds4_employee">Employee</string>
+    <string name="ds5_sales">Sales</string>
+
+
+    <string name="mo_comp_name">Mobile Company</string>
+    <string name="model_no">Model</string>
+    <string name="problem">Issue Description</string>
+    <string name="status">Repairing Status</string>
+
+    <string name="amount">Total Amount:</string>
+    <string name="deposit">Deposit:</string>
+    <string name="pending">Pending:</string>
+    <string name="date">Date: </string>
+    <string name="bottom_menu_home">Home</string>
+
+    <string name="customer_list_layout">Customer List</string>
+    <string name="sale_list_layout">Sale List</string>
+    <string name="sales_collections">Sales Collections</string>
+    <string name="repair_collections">Repair Collections</string>
+    <string name="today_s_total_collection">Today\'s Total Collection :</string>
+    <string name="payments">Payments :</string>
+    <string name="print">Print</string>
+    <string name="sale_collection">Sale Collection</string>
+    <string name="add_product">Add Product</string>
+    <string name="collection">Collection</string>
+    <string name="add_employee">Add Employee</string>
+    <string name="select_cust_dob">Select Customer Date Of Birth</string>
+    <string name="enter_cust_nm">Enter Customer Name</string>
+    <string name="enter_cust_addr">Enter Customer Address</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="enter_mobile_company_name">Enter Mobile Company Name</string>
+    <string name="enter_issue_description">Enter Issue Description</string>
+    <string name="enter_total_amount">Enter Total Amount</string>
+    <string name="select_product_name">Select Product Name</string>
+    <string name="category">Category</string>
+    <string name="add_new_product">Add New Items</string>
+    <string name="item_name">Item Name</string>
+    <string name="add_sales">Add Sales</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="welcome">Welcome To Rajput General Store</string>
+    <string name="sign_in_registration">Sign In/Registration</string>
+    <string name="already_have_an_account_login">Already have an account? Login</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="select_dob">Select DOB</string>
+    <string name="register">REGISTER</string>
+    <string name="create_account">Create Account</string>
+    <string name="select_role">Select Role</string>
+    <string name="menu">Menu</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="items">Items</string>
+    <string name="admin">Admin</string>
+    <string name="role">    Role</string>
+    <string name="users">Users</string>
+    <string name="permission">Permission</string>
+    <string name="product">Product</string>
+    <string name="customer">Customer</string>
+    <string name="disable_product_from_billing">Disable product from billing</string>
+    <string name="active">Active</string>
+    <string name="email_id">Email ID</string>
+    <string name="inactive_category_can_be_hidden_from_selection">Inactive category can be hidden from selection</string>
+    <string name="inactive_customers_can_be_hidden_from_selection">Inactive customers can be hidden from selection</string>
+    <string name="inactive_units_can_be_hidden_from_selection">Inactive units can be hidden from selection</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="user_first_name">User First Name</string>
+    <string name="subtotal_rate_qty">Subtotal (Rate × Qty)</string>
+    <string name="category_description">Category Description</string>
+    <string name="view_category_list">View Category list</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="login_subtitle">Sign in to continue to General Store</string>
+    <string name="dont_have_account">Don\'t have an account? </string>
+    <string name="register_link">Register</string>
+    <string name="app_logo_desc">App Logo</string>
+    <string name="registration_subtitle">Join Rajput General Store to manage your inventory</string>
+
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email_address">Email Address</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="confirm_password">Confirm Password</string>
+
+    <string name="add_items">Add Items</string>
+
+    <string name="invoice_no_label">Invoice No.</string>
+    <string name="date_label">Date</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="total_gst">Total GST</string>
+    <string name="overall_discount_percent">Overall Discount (%)</string>
+    <string name="grand_total">Grand Total</string>
+    <string name="paid_amount">Paid Amount</string>
+    <string name="balance">Balance</string>
+    <string name="save">Save</string>
+    <string name="search_products_hint">Search Products (Name, SKU, Barcode)</string>
+    <string name="filter_category_hint">Filter Category</string>
+    <string name="scan_barcode">Scan Barcode</string>
+    <string name="add_product_desc">Add Product</string>
+    <string name="no_products_found">No products found</string>
+    <string name="product_name_hint">Product Name</string>
+    <string name="sku_hint">SKU</string>
+    <string name="barcode_hint">Barcode</string>
+    <string name="unit_hint">Unit</string>
+    <string name="cost_price_hint">Cost Price</string>
+    <string name="sell_price_hint">Sell Price</string>
+    <string name="mrp_hint">MRP</string>
+    <string name="gst_percent_hint">GST %</string>
+    <string name="opening_stock_hint">Opening Stock</string>
+    <string name="low_stock_alert_hint">Low Stock Alert</string>
+    <string name="is_active_label">Is Active</string>
+    <string name="customer_name_hint">Customer Name</string>
+    <string name="phone_hint">Phone</string>
+    <string name="address_line_1_hint">Address Line 1</string>
+    <string name="city_hint">City</string>
+    <string name="state_hint">State</string>
+    <string name="pincode_hint">Pincode</string>
+    <string name="opening_balance_hint">Opening Balance</string>
+    <string name="add_customer_desc">Add Customer</string>
+    <string name="no_customers_found">No customers found</string>
+    <string name="no_categories_found">No categories found</string>
+    <string name="no_units_found">No units found</string>
+    <string name="search_invoice_hint">Search Invoice (No, Customer)</string>
+    <string name="new_invoice_desc">New Invoice</string>
+    <string name="enter_barcode_hint">Enter Barcode</string>
+    <string name="today_sales_label">Today Sales</string>
+    <string name="money_received_today">Money received today</string>
+    <string name="total_billed_amount_today">Total billed amount today</string>
+    <string name="received_label">Received</string>
+    <string name="paid_label">Paid</string>
+    <string name="pending_label">Pending</string>
+    <string name="due_label">Due</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button">LOGIN</string>
+    <string name="remove_item_desc">Remove Item</string>
+    <string name="edit_product_title">Edit Product</string>
+    <string name="delete_product_title">Delete Product</string>
+    <string name="delete_confirm_msg">Are you sure you want to delete %1$s?</string>
+    <string name="edit_category_title">Edit Category</string>
+    <string name="delete_category_title">Delete Category</string>
+    <string name="edit_unit_title">Edit Unit</string>
+    <string name="delete_unit_title">Delete Unit</string>
+    <string name="edit_customer_title">Edit Customer</string>
+    <string name="delete_customer_title">Delete Customer</string>
+    <string name="search_by_barcode_title">Search by Barcode</string>
+    <string name="all_fields_required">All fields are required!</string>
+    <string name="operation_successful">Operation Successful!</string>
+    <string name="invoice_saved_successfully">Invoice Saved Successfully!</string>
+    <string name="success">Success!</string>
+    <string name="fill_required_data">Fill the required data !</string>
+    <string name="all_categories">All Categories</string>
+    <string name="invoice_label">Invoice: %1$s</string>
+    <string name="added_to_cart">%1$s added to cart</string>
+    <string name="search">Search</string>
+
+    <string name="menu_roles">Roles</string>
+    <string name="menu_users">Users</string>
+    <string name="menu_categories">Categories</string>
+    <string name="menu_units">Units</string>
+    <string name="menu_products">Products</string>
+    <string name="menu_suppliers">Suppliers</string>
+    <string name="menu_customers">Customers</string>
+    <string name="menu_purchases">Purchases</string>
+    <string name="menu_billing">Billing</string>
+    <string name="menu_sales_reports">Sales Reports</string>
+    <string name="menu_account">Account</string>
+    <string name="billing_frag">Billing</string>
+    <string name="symbol">Symbol</string>
+    <string name="added_items">Added Items</string>
+    <string name="add_more_items">+ Add More Items</string>
+    <string name="add_customer">Add Customer</string>
+    <string name="new_units">New Units</string>
+    <string name="view_permissions">View Permissions</string>
+</resources>

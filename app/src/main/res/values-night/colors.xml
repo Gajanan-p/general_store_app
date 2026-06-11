@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Mode Colors -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <color name="logo_blue">#FF1F4E79</color> <!-- Keep brand color for toolbar contrast -->
+    <color name="req_bg">#FF000000</color>
+    <color name="lavender">#BB86FC</color>
+    <color name="gray">#FFBDBDBD</color>
+    <color name="home_process_button">#FF2C2C2C</color>
+
+    <color name="green">#81C784</color>
+    <color name="red">#E57373</color>
+    <color name="light_green">#1B5E20</color>
+    <color name="light_red">#B71C1C</color>
+
+    <color name="surface_stroke">#FF333333</color>
+    <color name="item_stroke">#FF222222</color>
+    <color name="secondary_text">#FFBDBDBD</color>
+
+    <!-- Login Background for Dark Mode -->
+    <color name="login_bg_start">#FF121212</color>
+    <color name="login_bg_end">#FF000000</color>
+
+    <!-- Semantic Theme Colors for Dark Mode -->
+    <color name="background_main">#FF121212</color>
+    <color name="on_background_main">#FFFFFFFF</color>
+    <color name="surface_main">#FF121212</color>
+    <color name="on_surface_main">#FFFFFFFF</color>
+    <color name="on_primary_main">#FFFFFFFF</color>
+
+    <color name="brand_accent">#FF90CAF9</color> <!-- Light blue for Dark Mode -->
+    <color name="on_brand_accent">#FF000000</color> <!-- Black text on Light Blue -->
+
+</resources>

@@ -1,0 +1,38 @@
+
+
+<resources>
+        <!-- Default screen margins, per the Android Design guidelines. -->
+        <dimen name="activity_horizontal_margin">16dp</dimen>
+        <dimen name="activity_vertical_margin">16dp</dimen>
+        <dimen name="nav_header_vertical_spacing">8dp</dimen>
+        <dimen name="nav_header_height">176dp</dimen>
+        <dimen name="fab_margin">16dp</dimen>
+
+        <dimen name="home_text_size">16sp</dimen>
+        <dimen name="recent_job_row_text_size">14sp</dimen>
+        <dimen name="total_collection">16sp</dimen>
+        <dimen name="total">18sp</dimen>
+        <dimen name="simple_margin">10dp</dimen>
+        <dimen name="sale_collection">5dp</dimen>
+        <dimen name="emp_detail_layout_top_margin">30dp</dimen>
+        <dimen name="list_layout">5dp</dimen>
+
+        <dimen name="marginTop">5dp</dimen>
+        <dimen name="padding">5dp</dimen>
+        <dimen name="head_text_size">16sp</dimen>
+        <dimen name="value_text_size">16sp</dimen>
+        <dimen name="_12sp">12sp</dimen>
+        <dimen name="dimens_200dp">200dp</dimen>
+        <dimen name="dimens_30dp">30dp</dimen>
+        <dimen name="main_heading_text_14sp">14sp</dimen>
+        <dimen name="_13sp">13sp</dimen>
+        <dimen name="_10dp">10dp</dimen>
+        <dimen name="_14sp">14sp</dimen>
+        <dimen name="_5dp">5dp</dimen>
+        <dimen name="_12dp">12dp</dimen>
+        <dimen name="_16dp">16dp</dimen>
+        <dimen name="_2dp">2dp</dimen>
+    <dimen name="_20sp">20sp</dimen>
+    <dimen name="_10sp">10sp</dimen>
+</resources>
+

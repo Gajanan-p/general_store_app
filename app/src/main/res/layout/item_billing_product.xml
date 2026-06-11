@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#EEEEEE">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5dp"
+        android:padding="12dp">
+
+        <!-- Item Number Badge -->
+        <TextView
+            android:id="@+id/text_item_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:textSize="@dimen/_10sp"
+            android:textColor="@color/secondary_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <!-- Product Name -->
+        <TextView
+            android:id="@+id/text_product_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            tools:text="Parle crackers"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/secondary_text"
+            app:layout_constraintStart_toEndOf="@id/text_item_index"
+            app:layout_constraintEnd_toStartOf="@id/text_item_total"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <!-- Item Total -->
+        <TextView
+            android:id="@+id/text_item_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="₹ 240"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <!-- Subtotal Line -->
+        <TextView
+            android:id="@+id/label_subtotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Item Subtotal"
+            android:textSize="12sp"
+            android:textColor="@color/secondary_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_product_name"/>
+
+        <TextView
+            android:id="@+id/text_item_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="2 x 120 = ₹ 240"
+            android:textSize="12sp"
+            android:textColor="@color/secondary_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/label_subtotal"/>
+
+        <!-- Discount Line -->
+        <TextView
+            android:id="@+id/label_discount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Discount (%): 0"
+            android:textSize="12sp"
+            android:textColor="#FFB74D"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_subtotal"/>
+
+        <TextView
+            android:id="@+id/text_discount_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="₹ 0"
+            android:textSize="12sp"
+            android:textColor="#FFB74D"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/label_discount"/>
+
+        <!-- Tax Line -->
+        <TextView
+            android:id="@+id/label_tax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Tax: 0%"
+            android:textSize="12sp"
+            android:textColor="@color/secondary_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_discount"/>
+
+        <TextView
+            android:id="@+id/text_tax_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="₹ 0"
+            android:textSize="12sp"
+            android:textColor="@color/secondary_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/label_tax"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
