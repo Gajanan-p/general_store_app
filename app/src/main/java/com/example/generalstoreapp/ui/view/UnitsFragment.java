@@ -20,7 +20,6 @@ import com.example.generalstoreapp.models.GetUnitsDataModel;
 import com.example.generalstoreapp.ui.adapters.UnitAdapter;
 import com.example.generalstoreapp.viewmodel.UnitsViewModel;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class UnitsFragment extends Fragment implements UnitAdapter.OnUnitActionListener {

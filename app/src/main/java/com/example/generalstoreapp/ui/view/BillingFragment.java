@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +27,7 @@ import com.example.generalstoreapp.R;
 import com.example.generalstoreapp.models.CartItem;
 import com.example.generalstoreapp.models.GetCustomerDataModel;
 import com.example.generalstoreapp.ui.adapters.BillingItemAdapter;
+import com.example.generalstoreapp.utils.PrintUtils;
 import com.example.generalstoreapp.viewmodel.BillingViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -211,15 +213,45 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
 
         viewModel.getSuccess().observe(getViewLifecycleOwner(), success -> {
             if (success) {
-                Toast.makeText(requireContext(), getString(R.string.invoice_saved_successfully), Toast.LENGTH_SHORT).show();
-                viewModel.reset();
-                requireActivity().onBackPressed();
+                showPrintConfirmationDialog();
             }
         });
 
         viewModel.getError().observe(getViewLifecycleOwner(), error -> {
             if (error != null) Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void showPrintConfirmationDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Invoice Saved")
+                .setMessage("Invoice saved successfully! Do you want to print the bill?")
+                .setPositiveButton("Print", (dialog, which) -> {
+                    printBill();
+                    viewModel.reset();
+                    requireActivity().onBackPressed();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    viewModel.reset();
+                    requireActivity().onBackPressed();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void printBill() {
+        GetCustomerDataModel customer = viewModel.getSelectedCustomer().getValue();
+        List<CartItem> items = viewModel.getCartItems().getValue();
+        String invoiceNo = viewModel.getInvoiceNo().getValue();
+        String date = viewModel.getInvoiceDate().getValue();
+        double subtotal = viewModel.getSubtotal().getValue() != null ? viewModel.getSubtotal().getValue() : 0.0;
+        double discount = viewModel.getTotalDiscount().getValue() != null ? viewModel.getTotalDiscount().getValue() : 0.0;
+        double tax = viewModel.getTotalGst().getValue() != null ? viewModel.getTotalGst().getValue() : 0.0;
+        double grandTotal = viewModel.getGrandTotal().getValue() != null ? viewModel.getGrandTotal().getValue() : 0.0;
+        double balance = viewModel.getBalance().getValue() != null ? viewModel.getBalance().getValue() : 0.0;
+        double paid = grandTotal - balance;
+
+        PrintUtils.printInvoice(requireContext(), customer, items, invoiceNo, date, subtotal, discount, tax, grandTotal, paid, balance);
     }
 
     private String formatCurrency(Double value) {

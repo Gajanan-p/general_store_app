@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:layout_margin="16dp"
-        android:text="New Category"
+        android:text="@string/new_category"
         app:elevation="0dp"
         android:background="@drawable/bg_button"
         app:icon="@android:drawable/ic_input_add"/>

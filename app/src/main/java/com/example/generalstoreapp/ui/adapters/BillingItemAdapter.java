@@ -54,7 +54,8 @@ public class BillingItemAdapter extends RecyclerView.Adapter<BillingItemAdapter.
         holder.textDisc.setText(String.format(Locale.getDefault(), "₹ %.0f", item.getDiscountAmount()));
         
         holder.textTax.setText(String.format(Locale.getDefault(), "₹ %.0f", item.getGstAmount()));
-        holder.lblTax.setText(String.format(Locale.getDefault(), "Tax: %d%%", item.getProduct().getGstPercent()));
+        holder.lblTax.setText(String.format(Locale.getDefault(), "Tax: %d%%", 
+                (item.getProduct() != null && item.getProduct().getGstPercent() != null) ? item.getProduct().getGstPercent() : 0));
 
         holder.itemView.setOnLongClickListener(v -> {
             listener.onRemove(item);

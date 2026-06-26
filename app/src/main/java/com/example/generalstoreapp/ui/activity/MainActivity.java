@@ -2,6 +2,7 @@ package com.example.generalstoreapp.ui.activity;
 
 import static com.google.android.material.snackbar.BaseTransientBottomBar.ANIMATION_MODE_SLIDE;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -35,8 +36,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.generalstoreapp.utils.PermissionUtils;
+import com.example.generalstoreapp.utils.PrintUtils;
+import com.example.generalstoreapp.viewmodel.HomeViewModel;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 
@@ -47,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private UsersModel usersModel;
     private LoginModel loginModel;
     private AuthRepository authRepository;
+    private HomeViewModel homeViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +112,10 @@ public class MainActivity extends AppCompatActivity {
 // Drawer nav (you forgot this also)
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            invalidateOptionsMenu();
+        });
+
         binding.navView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_logout) {
@@ -116,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         fetchUsersRolesAndPermission();
+
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        homeViewModel.init(this);
         
         // Initial permission check from cached data
         UsersModel cachedUser = SharedPreferencesUtils.getUserMeDataPreferences(this);
@@ -143,8 +160,53 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        boolean isHome = navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() == R.id.nav_home;
+        
+        boolean canReadBilling = PermissionUtils.hasPermission(this, "BILLING_READ");
+        boolean canReadReports = PermissionUtils.hasPermission(this, "REPORT_READ");
+        
+        android.view.MenuItem printItem = menu.findItem(R.id.action_print);
+        if (printItem != null) {
+            printItem.setVisible(isHome && (canReadBilling || canReadReports));
+        }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_print) {
+            printTodayReport();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void printTodayReport() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String datePart = sdf.format(new Date());
+        String fromDate = datePart + "T00:00:00Z";
+        String toDate = datePart + "T23:59:59Z";
+
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Preparing report...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        homeViewModel.fetchBillingList(null, fromDate, toDate, 100, 0);
+        homeViewModel.getBillingListLiveData().observe(this, list -> {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+                if (list != null && !list.isEmpty()) {
+                    PrintUtils.printReport(this, list);
+                } else {
+                    Toast.makeText(this, "No data found for today", Toast.LENGTH_SHORT).show();
+                }
+                // Important: remove observer to avoid multiple prints if data changes
+                homeViewModel.getBillingListLiveData().removeObservers(this);
+            }
+        });
     }
 
     @Override

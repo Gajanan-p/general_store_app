@@ -68,7 +68,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     // 🔹 Get Billing List
-    public void fetchBillingList(int supplierId, String fromDate, String toDate, int limit, int offset) {
+    public void fetchBillingList(Integer supplierId, String fromDate, String toDate, int limit, int offset) {
 
         loadingLiveData.setValue(true);
 
