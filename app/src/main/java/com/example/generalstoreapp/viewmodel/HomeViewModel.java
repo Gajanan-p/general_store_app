@@ -68,11 +68,11 @@ public class HomeViewModel extends ViewModel {
     }
 
     // 🔹 Get Billing List
-    public void fetchBillingList(int supplierId, String fromDate, String toDate, int limit, int offset) {
+    public void fetchBillingList(Integer customerId, String fromDate, String toDate, int limit, int offset) {
 
         loadingLiveData.setValue(true);
 
-        billingRepository.getBillingList(supplierId, fromDate, toDate,limit, offset,
+        billingRepository.getBillingList(customerId, fromDate, toDate,limit, offset,
                 new ApiCallback<ArrayList<GetBillingDataModel>>() {
                     @Override
                     public void onResult(ApiResult<ArrayList<GetBillingDataModel>> result) {

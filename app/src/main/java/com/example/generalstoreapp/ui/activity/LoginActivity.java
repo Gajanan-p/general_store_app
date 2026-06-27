@@ -39,6 +39,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
+
+        // Check if user is already logged in
+        if (SharedPreferencesUtils.getLoginDataPreferences(this) != null) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_login);
 
         // Handle insets
@@ -78,10 +87,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
         });
-
-        // Debug credentials
-        editTextUserName.setText("gajupande24@gmail.com");
-        editTextPassword.setText("12345678");
     }
 
     private void observeViewModel() {

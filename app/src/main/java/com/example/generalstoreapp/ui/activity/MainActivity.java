@@ -1,27 +1,24 @@
 package com.example.generalstoreapp.ui.activity;
 
-import static com.google.android.material.snackbar.BaseTransientBottomBar.ANIMATION_MODE_SLIDE;
-
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Menu;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.generalstoreapp.R;
 import com.example.generalstoreapp.databinding.ActivityMainBinding;
 import com.example.generalstoreapp.models.LoginModel;
-import com.example.generalstoreapp.models.UserRole;
 import com.example.generalstoreapp.models.Users;
 import com.example.generalstoreapp.models.UsersModel;
 import com.example.generalstoreapp.repository.AuthRepository;
 import com.example.generalstoreapp.services.handlingservices.ApiResult;
 import com.example.generalstoreapp.utils.SharedPreferencesUtils;
+import com.example.generalstoreapp.utils.TokenProvider;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.activity.EdgeToEdge;
@@ -35,10 +32,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.generalstoreapp.utils.PermissionUtils;
+import com.example.generalstoreapp.utils.PrintUtils;
+import com.example.generalstoreapp.viewmodel.HomeViewModel;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private UsersModel usersModel;
     private LoginModel loginModel;
     private AuthRepository authRepository;
+    private HomeViewModel homeViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +69,13 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         
-        // Handle insets for Edge-to-Edge
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             androidx.core.graphics.Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            // We only need to pad the bottom for navigation bar if using bottom nav
             v.setPadding(insets.left, 0, insets.right, insets.bottom);
             return windowInsets;
         });
 
         authRepository = new AuthRepository(this);
-
         setSupportActionBar(binding.appBarMain.toolbar);
         BottomNavigationView navView = findViewById(R.id.bottom_navigation);
 
@@ -93,14 +94,13 @@ public class MainActivity extends AppCompatActivity {
                 .setOpenableLayout(drawer)
                 .build();
 
-// Action bar
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-
-// Bottom nav
         NavigationUI.setupWithNavController(navView, navController);
-
-// Drawer nav (you forgot this also)
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            invalidateOptionsMenu();
+        });
 
         binding.navView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -116,8 +116,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         fetchUsersRolesAndPermission();
+
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        homeViewModel.init(this);
         
-        // Initial permission check from cached data
         UsersModel cachedUser = SharedPreferencesUtils.getUserMeDataPreferences(this);
         if (cachedUser != null) {
             handledPermissionWiseViews(cachedUser);
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void logout() {
         SharedPreferencesUtils.clearLoginDataPreferences(this);
+        TokenProvider.get(this).clear();
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -135,16 +138,58 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        boolean isHome = navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() == R.id.nav_home;
+        
+        boolean canReadBilling = PermissionUtils.hasPermission(this, "BILLING_READ");
+        boolean canReadReports = PermissionUtils.hasPermission(this, "REPORT_READ");
+        
+        android.view.MenuItem printItem = menu.findItem(R.id.action_print);
+        if (printItem != null) {
+            printItem.setVisible(isHome && (canReadBilling || canReadReports));
+        }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_print) {
+            printTodayReport();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void printTodayReport() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String datePart = sdf.format(new Date());
+        String fromDate = datePart + "T00:00:00Z";
+        String toDate = datePart + "T23:59:59Z";
+
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Preparing report...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        homeViewModel.fetchBillingList(null, fromDate, toDate, 100, 0);
+        homeViewModel.getBillingListLiveData().observe(this, list -> {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+                if (list != null && !list.isEmpty()) {
+                    PrintUtils.printReport(this, list);
+                } else {
+                    Toast.makeText(this, "No data found for today", Toast.LENGTH_SHORT).show();
+                }
+                homeViewModel.getBillingListLiveData().removeObservers(this);
+            }
+        });
     }
 
     @Override
@@ -153,8 +198,6 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
-//    Fetched the users, roles and permissions
 
     public void fetchUsersRolesAndPermission(){
         authRepository.getUsers(result -> {
@@ -214,12 +257,6 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    public void handledUsersWiseViews(UsersModel usersModel){
-
-    }
-    public void handledRolesWiseViews(UsersModel usersModel){
-
-    }
     public void handledPermissionWiseViews(UsersModel usersModel){
         if (usersModel == null || usersModel.getPermissions() == null) return;
 
@@ -227,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
         Menu navMenu = binding.navView.getMenu();
         Menu bottomMenu = ((BottomNavigationView) findViewById(R.id.bottom_navigation)).getMenu();
 
-        // Mapping menu items to permissions
         checkAndSetVisible(navMenu, R.id.categoriesFragment, permissions.contains("CATEGORY_READ"));
         checkAndSetVisible(navMenu, R.id.unitsFragment, permissions.contains("UNIT_READ"));
         checkAndSetVisible(navMenu, R.id.productFragment, permissions.contains("PRODUCT_READ"));
@@ -240,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
         checkAndSetVisible(navMenu, R.id.salesFragment, permissions.contains("REPORT_READ"));
         checkAndSetVisible(navMenu, R.id.settingsFragment, permissions.contains("RBAC_READ") || permissions.contains("ROLE_READ"));
 
-        // Bottom Navigation filtering
         checkAndSetVisible(bottomMenu, R.id.productFragment, permissions.contains("PRODUCT_READ"));
         checkAndSetVisible(bottomMenu, R.id.settingsFragment, permissions.contains("RBAC_READ") || permissions.contains("ROLE_READ"));
     }
@@ -251,13 +286,4 @@ public class MainActivity extends AppCompatActivity {
             item.setVisible(visible);
         }
     }
-    public void handledActiveLoginUser(LoginModel loginModel1){
-        if (loginModel1==null){
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.example.generalstoreapp.ui.view;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,17 +17,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.generalstoreapp.R;
+import com.example.generalstoreapp.models.AddCustomerRequest;
 import com.example.generalstoreapp.models.CartItem;
 import com.example.generalstoreapp.models.GetCustomerDataModel;
 import com.example.generalstoreapp.ui.adapters.BillingItemAdapter;
+import com.example.generalstoreapp.utils.PrintUtils;
 import com.example.generalstoreapp.viewmodel.BillingViewModel;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -36,11 +40,6 @@ import java.util.Locale;
 public class BillingFragment extends Fragment implements View.OnClickListener, BillingItemAdapter.OnItemActionListener {
 
     private BillingViewModel viewModel;
-    
-    public static BillingFragment newInstance() {
-        return new BillingFragment();
-    }
-
     private BillingItemAdapter adapter;
     
     private AutoCompleteTextView editCustomer;
@@ -50,11 +49,16 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
     private EditText editReceivedAmount;
     private CheckBox cbReceived;
     private Button btnAddItems;
+    private MaterialButton btnAddCustomer;
     private com.google.android.material.button.MaterialButton btnCancel, btnSave;
     private RecyclerView recyclerView;
 
     private List<GetCustomerDataModel> customerList = new ArrayList<>();
     private ArrayAdapter<String> custAdapter;
+
+    public static BillingFragment newInstance() {
+        return new BillingFragment();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -86,6 +90,7 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
         cbReceived = view.findViewById(R.id.cb_received);
 
         btnAddItems = view.findViewById(R.id.button_add_items);
+        btnAddCustomer = view.findViewById(R.id.btn_add_customer_billing);
         btnCancel = view.findViewById(R.id.button_billing_cancel);
         btnSave = view.findViewById(R.id.button_billing_save);
         recyclerView = view.findViewById(R.id.recycler_billing_items);
@@ -99,6 +104,7 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
 
     private void setupListeners() {
         btnAddItems.setOnClickListener(this);
+        btnAddCustomer.setOnClickListener(this);
         btnSave.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
 
@@ -177,12 +183,23 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
             custAdapter.clear();
             custAdapter.addAll(names);
             custAdapter.notifyDataSetChanged();
-            editCustomer.showDropDown();
+            
+            if (customers.isEmpty() && editCustomer.getText().length() > 0) {
+                btnAddCustomer.setVisibility(View.VISIBLE);
+            } else {
+                btnAddCustomer.setVisibility(View.GONE);
+            }
+            
+            if (!customers.isEmpty()) {
+                editCustomer.showDropDown();
+            }
         });
 
         viewModel.getSelectedCustomer().observe(getViewLifecycleOwner(), customer -> {
             if (customer != null) {
+                editCustomer.setText(customer.getName(), false);
                 editPhone.setText(customer.getPhone());
+                btnAddCustomer.setVisibility(View.GONE);
             }
         });
 
@@ -190,13 +207,13 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
             adapter.setItems(items);
         });
 
-        viewModel.getSubtotal().observe(getViewLifecycleOwner(), val -> lblSubtotal.setText(String.format("Subtotal: %.2f", val)));
-        viewModel.getTotalGst().observe(getViewLifecycleOwner(), val -> lblTotalTax.setText(String.format("Total Tax Amt: %.2f", val)));
-        viewModel.getTotalQty().observe(getViewLifecycleOwner(), val -> lblTotalQty.setText(String.format("Total Qty: %.1f", val)));
-        viewModel.getTotalDiscount().observe(getViewLifecycleOwner(), val -> lblTotalDisc.setText(String.format("Total Disc: %.1f", val)));
+        viewModel.getSubtotal().observe(getViewLifecycleOwner(), val -> lblSubtotal.setText(String.format(Locale.getDefault(), "Subtotal: %.2f", val)));
+        viewModel.getTotalGst().observe(getViewLifecycleOwner(), val -> lblTotalTax.setText(String.format(Locale.getDefault(), "Total Tax Amt: %.2f", val)));
+        viewModel.getTotalQty().observe(getViewLifecycleOwner(), val -> lblTotalQty.setText(String.format(Locale.getDefault(), "Total Qty: %.1f", val)));
+        viewModel.getTotalDiscount().observe(getViewLifecycleOwner(), val -> lblTotalDisc.setText(String.format(Locale.getDefault(), "Total Disc: %.1f", val)));
 
         viewModel.getGrandTotal().observe(getViewLifecycleOwner(), val -> {
-            textTotalAmount.setText(String.format("%.2f", val));
+            textTotalAmount.setText(String.format(Locale.getDefault(), "%.2f", val));
             if (cbReceived.isChecked()) {
                 String formatted = String.format(Locale.US, "%.2f", val);
                 if (!editReceivedAmount.getText().toString().equals(formatted)) {
@@ -204,16 +221,14 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
                 }
             }
         });
-        viewModel.getBalance().observe(getViewLifecycleOwner(), val -> textBalanceDue.setText(String.format("%.2f", val)));
+        viewModel.getBalance().observe(getViewLifecycleOwner(), val -> textBalanceDue.setText(String.format(Locale.getDefault(), "%.2f", val)));
         
         viewModel.getInvoiceNo().observe(getViewLifecycleOwner(), no -> textInvoiceNo.setText(no));
         viewModel.getInvoiceDate().observe(getViewLifecycleOwner(), date -> textDate.setText(date));
 
         viewModel.getSuccess().observe(getViewLifecycleOwner(), success -> {
             if (success) {
-                Toast.makeText(requireContext(), getString(R.string.invoice_saved_successfully), Toast.LENGTH_SHORT).show();
-                viewModel.reset();
-                requireActivity().onBackPressed();
+                showPrintConfirmationDialog();
             }
         });
 
@@ -222,8 +237,36 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
         });
     }
 
-    private String formatCurrency(Double value) {
-        return String.format(Locale.getDefault(), "₹%.2f", value);
+    private void showPrintConfirmationDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Invoice Saved")
+                .setMessage("Invoice saved successfully! Do you want to print the bill?")
+                .setPositiveButton("Print", (dialog, which) -> {
+                    printBill();
+                    viewModel.reset();
+                    requireActivity().onBackPressed();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    viewModel.reset();
+                    requireActivity().onBackPressed();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void printBill() {
+        GetCustomerDataModel customer = viewModel.getSelectedCustomer().getValue();
+        List<CartItem> items = viewModel.getCartItems().getValue();
+        String invoiceNo = viewModel.getInvoiceNo().getValue();
+        String date = viewModel.getInvoiceDate().getValue();
+        double subtotal = viewModel.getSubtotal().getValue() != null ? viewModel.getSubtotal().getValue() : 0.0;
+        double discount = viewModel.getTotalDiscount().getValue() != null ? viewModel.getTotalDiscount().getValue() : 0.0;
+        double tax = viewModel.getTotalGst().getValue() != null ? viewModel.getTotalGst().getValue() : 0.0;
+        double grandTotal = viewModel.getGrandTotal().getValue() != null ? viewModel.getGrandTotal().getValue() : 0.0;
+        double balance = viewModel.getBalance().getValue() != null ? viewModel.getBalance().getValue() : 0.0;
+        double paid = grandTotal - balance;
+
+        PrintUtils.printInvoice(requireContext(), customer, items, invoiceNo, date, subtotal, discount, tax, grandTotal, paid, balance);
     }
 
     private double parseDouble(String val) {
@@ -239,12 +282,65 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
         int id = view.getId();
         if (id == R.id.button_add_items) {
             Navigation.findNavController(view).navigate(R.id.itemsFragment);
+        } else if (id == R.id.btn_add_customer_billing) {
+            showAddCustomerDialog();
         } else if (id == R.id.button_billing_save) {
             viewModel.submitBill();
         } else if (id == R.id.button_billing_cancel) {
             viewModel.reset();
             requireActivity().onBackPressed();
         }
+    }
+
+    private void showAddCustomerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_customer, null);
+        builder.setView(dialogView);
+
+        TextInputEditText editName = dialogView.findViewById(R.id.edit_customer_name);
+        TextInputEditText editPhone = dialogView.findViewById(R.id.edit_customer_phone);
+        TextInputEditText editEmail = dialogView.findViewById(R.id.edit_customer_email);
+        TextInputEditText editAddress = dialogView.findViewById(R.id.edit_address_line1);
+        TextInputEditText editCity = dialogView.findViewById(R.id.edit_city);
+        TextInputEditText editState = dialogView.findViewById(R.id.edit_state);
+        TextInputEditText editPincode = dialogView.findViewById(R.id.edit_pincode);
+        TextInputEditText editBalance = dialogView.findViewById(R.id.edit_opening_balance);
+        SwitchMaterial switchActive = dialogView.findViewById(R.id.switch_active);
+        
+        editName.setText(editCustomer.getText().toString());
+
+        AlertDialog dialog = builder.create();
+
+        dialogView.findViewById(R.id.button_submit).setOnClickListener(v -> {
+            String name = editName.getText().toString().trim();
+            if (name.isEmpty()) {
+                editName.setError("Name is required");
+                return;
+            }
+
+            AddCustomerRequest request = new AddCustomerRequest();
+            request.setName(name);
+            request.setPhone(editPhone.getText().toString().trim());
+            request.setEmail(editEmail.getText().toString().trim());
+            request.setAddressLine1(editAddress.getText().toString().trim());
+            request.setCity(editCity.getText().toString().trim());
+            request.setState(editState.getText().toString().trim());
+            request.setPincode(editPincode.getText().toString().trim());
+            
+            try {
+                String balanceStr = editBalance.getText().toString().trim();
+                request.setOpeningBalance(balanceStr.isEmpty() ? 0 : Integer.parseInt(balanceStr));
+            } catch (NumberFormatException e) {
+                request.setOpeningBalance(0);
+            }
+            
+            request.setIsActive(switchActive.isChecked() ? 1 : 0);
+
+            viewModel.addCustomerAndSelect(request);
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
     @Override

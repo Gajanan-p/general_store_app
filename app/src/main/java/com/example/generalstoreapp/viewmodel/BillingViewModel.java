@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.generalstoreapp.models.AddCustomerRequest;
+import com.example.generalstoreapp.models.AddCustomerResponse;
 import com.example.generalstoreapp.models.BillingItemsRequest;
 import com.example.generalstoreapp.models.BillingRequest;
 import com.example.generalstoreapp.models.CartItem;
@@ -78,6 +80,32 @@ public class BillingViewModel extends ViewModel {
         });
     }
 
+    public void addCustomerAndSelect(AddCustomerRequest request) {
+        loading.setValue(true);
+        customerRepository.addCustomer(request, result -> {
+            loading.setValue(false);
+            if (result.status == ApiResult.Status.SUCCESS && result.data != null) {
+                AddCustomerResponse response = result.data;
+                GetCustomerDataModel newCustomer = new GetCustomerDataModel();
+                newCustomer.setId(response.getId());
+                newCustomer.setName(response.getName());
+                newCustomer.setPhone(response.getPhone());
+                newCustomer.setEmail(response.getEmail());
+                newCustomer.setAddressLine1(response.getAddressLine1());
+                newCustomer.setAddressLine2(response.getAddressLine2());
+                newCustomer.setCity(response.getCity());
+                newCustomer.setState(response.getState());
+                newCustomer.setPincode(response.getPincode());
+                newCustomer.setOpeningBalance(response.getOpeningBalance());
+                newCustomer.setIsActive(response.getIsActive());
+                
+                selectCustomer(newCustomer);
+            } else {
+                error.setValue(result.message != null ? result.message : "Error adding customer");
+            }
+        });
+    }
+
     public void selectCustomer(GetCustomerDataModel customer) {
         selectedCustomer.setValue(customer);
     }
@@ -126,7 +154,7 @@ public class BillingViewModel extends ViewModel {
         List<CartItem> currentItems = cartItems.getValue();
         if (currentItems != null) {
             currentItems.remove(item);
-            cartItems.setValue(currentItems);
+            cartItems.setValue(new ArrayList<>(currentItems));
             calculateTotals();
         }
     }
@@ -187,7 +215,6 @@ public class BillingViewModel extends ViewModel {
         
         BillingRequest request = new BillingRequest();
         request.setCustomerId(selectedCustomer.getValue().getId());
-        // Convert dd/MM/yyyy to yyyy-MM-dd for API if needed, but I'll stick to what's requested
         request.setInvoiceDate(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()));
         request.setPaidAmount((int) paidAmount);
         request.setDiscountAmount(totalDiscount.getValue().intValue());

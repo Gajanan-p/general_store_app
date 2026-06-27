@@ -15,6 +15,9 @@ public class GetBillingDataModel {
     @SerializedName("customer_id")
     @Expose
     private Integer customerId;
+    @SerializedName("customer")
+    @Expose
+    private GetCustomerDataModel customer;
     @SerializedName("invoice_date")
     @Expose
     private String invoiceDate;
@@ -53,13 +56,14 @@ public class GetBillingDataModel {
     public GetBillingDataModel() {
     }
 
-    public GetBillingDataModel(Integer id, String invoiceNo, Integer customerId, String invoiceDate, String status,
+    public GetBillingDataModel(Integer id, String invoiceNo, Integer customerId, GetCustomerDataModel customer, String invoiceDate, String status,
                                Integer subtotal, Integer discountAmount, Integer taxAmount, Integer totalAmount,
                                Integer paidAmount, Integer dueAmount, String notes, List<BillingItem> items) {
         super();
         this.id = id;
         this.invoiceNo = invoiceNo;
         this.customerId = customerId;
+        this.customer = customer;
         this.invoiceDate = invoiceDate;
         this.status = status;
         this.subtotal = subtotal;
@@ -94,6 +98,14 @@ public class GetBillingDataModel {
 
     public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
+    }
+
+    public GetCustomerDataModel getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(GetCustomerDataModel customer) {
+        this.customer = customer;
     }
 
     public String getInvoiceDate() {

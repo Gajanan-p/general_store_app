@@ -265,4 +265,8 @@
     <string name="add_customer">Add Customer</string>
     <string name="new_units">New Units</string>
     <string name="view_permissions">View Permissions</string>
+    <string name="action_print">Print Today\'s Report</string>
+    <string name="select_customer">Select Customer</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
 </resources>

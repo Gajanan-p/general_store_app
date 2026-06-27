@@ -1,0 +1,13 @@
+[33mf7ed9a8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: checkout: moving from main to main
+[33mf7ed9a8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: checkout: moving from main to main
+[33mf7ed9a8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{2}: branch: Reset to origin/main
+[33mf7ed9a8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{3}: checkout: moving from prodution to main
+[33mfa8d5c0[m[33m ([m[1;32mprodution[m[33m, [m[1;32mdev[m[33m)[m HEAD@{4}: checkout: moving from dev to prodution
+[33mfa8d5c0[m[33m ([m[1;32mprodution[m[33m, [m[1;32mdev[m[33m)[m HEAD@{5}: checkout: moving from main to dev
+[33mf7ed9a8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{6}: commit: Billing print commit
+[33mf275bc2[m HEAD@{7}: commit: initial commit
+[33mfa8d5c0[m[33m ([m[1;32mprodution[m[33m, [m[1;32mdev[m[33m)[m HEAD@{8}: rebase: checkout main
+[33mfa8d5c0[m[33m ([m[1;32mprodution[m[33m, [m[1;32mdev[m[33m)[m HEAD@{9}: checkout: moving from prodution to dev
+[33mfa8d5c0[m[33m ([m[1;32mprodution[m[33m, [m[1;32mdev[m[33m)[m HEAD@{10}: checkout: moving from main to prodution
+[33mfa8d5c0[m[33m ([m[1;32mprodution[m[33m, [m[1;32mdev[m[33m)[m HEAD@{11}: commit: initial commit
+[33mba56fbd[m HEAD@{12}: clone: from https://github.com/Gajanan-p/general_store_app.git
