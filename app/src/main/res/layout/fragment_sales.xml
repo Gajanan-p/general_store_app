@@ -21,62 +21,15 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/select_customer"
-                android:layout_marginBottom="8dp"
-                app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-                app:endIconMode="clear_text">
+                android:hint="Search Invoice (No, Customer)"
+                app:startIconDrawable="@android:drawable/ic_menu_search">
 
-                <AutoCompleteTextView
-                    android:id="@+id/auto_complete_customer"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_search_sales"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/select_customer"
-                    android:inputType="text"
-                    android:completionThreshold="1" />
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:hint="@string/from_date"
-                    app:startIconDrawable="@android:drawable/ic_menu_today">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_from_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:clickable="true"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="4dp"
-                    android:hint="@string/to_date"
-                    app:startIconDrawable="@android:drawable/ic_menu_today">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_to_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:clickable="true"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -88,15 +41,14 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_billing" />
 
-    <com.google.android.material.button.MaterialButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_billing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:text="@string/new_sale"
         app:srcCompat="@android:drawable/ic_input_add"
-        android:contentDescription="@string/new_invoice"/>
+        android:contentDescription="New Invoice"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"

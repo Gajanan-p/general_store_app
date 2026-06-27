@@ -170,9 +170,7 @@ public class BillingDetailFragment extends Fragment {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             BillingItem item = items.get(position);
             holder.textName.setText("Product ID: " + item.getProductId());
-            holder.textDetails.setText(String.format(Locale.getDefault(), "Price: ₹%d x %d", 
-                    item.getSellPrice() != null ? item.getSellPrice() : 0, 
-                    item.getQty() != null ? item.getQty() : 0));
+            holder.textDetails.setText(String.format(Locale.getDefault(), "Price: ₹%d x %d", item.getSellPrice(), item.getQty()));
             holder.textTotal.setText(formatCurrency(item.getLineTotal()));
         }
 

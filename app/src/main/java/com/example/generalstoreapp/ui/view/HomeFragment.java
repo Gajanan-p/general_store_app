@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         String fromDate = datePart + "T00:00:00Z";
         String toDate = datePart + "T23:59:59Z";
 
-        homeViewModel.fetchBillingList( null,
+        homeViewModel.fetchBillingList( 3,
                 fromDate,
                 toDate,
                 50,

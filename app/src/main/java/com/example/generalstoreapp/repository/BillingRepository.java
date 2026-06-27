@@ -21,7 +21,7 @@ public class BillingRepository {
         api = RetrofitClient.getApiService(context);
     }
 
-    public void getBillingList(Integer customerId, String fromDate, String toDate, int limit, int offset,
+    public void getBillingList(int customerId, String fromDate, String toDate, int limit, int offset,
                                ApiCallback<ArrayList<GetBillingDataModel>> callback) {
         ApiExecutor.execute(
                 api.getBillingListDataFromServer(

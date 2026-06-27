@@ -300,7 +300,7 @@ public interface ApiService {
 
     @Headers("Content-Type: application/json")
     @GET("billing")
-    Call<ArrayList<GetBillingDataModel>> getBillingListDataFromServer(@Query("customer_id") Integer customerId,
+    Call<ArrayList<GetBillingDataModel>> getBillingListDataFromServer(@Query("customer_id") int customerId,
                                                                       @Query("from_date") String fromDate,
                                                                       @Query("to_date") String toDate,
                                                                       @Query("limit") int limit,

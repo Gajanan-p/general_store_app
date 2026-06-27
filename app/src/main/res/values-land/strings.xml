@@ -8,7 +8,4 @@
     <string name="add_customer">Add Customer</string>
     <string name="new_units">New Units</string>
     <string name="view_permissions">View Permissions</string>
-    <string name="new_category">New Category</string>
-    <string name="new_sale">+ New Sale</string>
-    <string name="new_invoice">New Invoice</string>
 </resources>
