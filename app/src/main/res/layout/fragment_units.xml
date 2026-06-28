@@ -20,8 +20,12 @@
         android:layout_gravity="bottom|center"
         android:layout_margin="16dp"
         android:text="@string/new_units"
+        android:textColor="@color/on_brand_accent"
+        app:iconTint="@color/on_brand_accent"
+        app:backgroundTint="@color/brand_accent"
+        app:cornerRadius="16dp"
         app:elevation="0dp"
-        app:icon="@android:drawable/ic_input_add" />
+        app:icon="@drawable/baseline_add_circle_24"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"

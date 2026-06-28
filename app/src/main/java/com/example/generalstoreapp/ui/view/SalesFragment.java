@@ -40,7 +40,7 @@ public class SalesFragment extends Fragment implements BillingAdapter.OnBillingA
     private BillingAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private FloatingActionButton fabAdd;
+    private MaterialButton fabAdd;
 
     private AutoCompleteTextView autoCustomer;
     private TextInputEditText editFromDate, editToDate;

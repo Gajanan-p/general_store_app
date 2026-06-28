@@ -269,4 +269,7 @@
     <string name="select_customer">Select Customer</string>
     <string name="from_date">From Date</string>
     <string name="to_date">To Date</string>
+    <string name="new_category">New Category</string>
+    <string name="user_icon">User Icon</string>
+    <string name="new_invoice">New Invoice</string>
 </resources>
