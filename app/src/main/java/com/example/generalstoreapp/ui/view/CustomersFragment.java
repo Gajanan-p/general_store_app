@@ -22,6 +22,7 @@ import com.example.generalstoreapp.models.AddCustomerRequest;
 import com.example.generalstoreapp.models.GetCustomerDataModel;
 import com.example.generalstoreapp.ui.adapters.CustomerAdapter;
 import com.example.generalstoreapp.viewmodel.CustomersViewModel;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
@@ -31,7 +32,7 @@ public class CustomersFragment extends Fragment implements CustomerAdapter.OnCus
     private CustomersViewModel viewModel;
     private CustomerAdapter adapter;
     private RecyclerView recyclerView;
-    private FloatingActionButton fabAdd;
+    private MaterialButton fabAdd;
     private ProgressBar progressBar;
     private TextView textEmpty;
     private TextInputEditText editSearch;

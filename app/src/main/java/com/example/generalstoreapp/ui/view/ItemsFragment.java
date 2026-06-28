@@ -64,6 +64,7 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
         btnSubmit = view.findViewById(R.id.btn_submit_items);
         
         layoutResults = view.findViewById(R.id.layout_results);
+        layoutResults.setVisibility(View.VISIBLE);
         layoutItemDetails = view.findViewById(R.id.layout_item_details);
         layoutAddedItems = view.findViewById(R.id.layout_added_items);
         editQuantity = view.findViewById(R.id.edit_quantity);
@@ -127,20 +128,18 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
         editQuantity.setText("1");
         editRate.setText("");
         layoutItemDetails.setVisibility(View.GONE);
-        layoutResults.setVisibility(View.GONE);
+        layoutResults.setVisibility(View.VISIBLE);
         editSearch.requestFocus();
     }
 
     private void setupSearchAndFilter() {
         editSearch.setOnClickListener(v -> {
-            if (currentSelectedProduct == null) {
-                layoutResults.setVisibility(View.VISIBLE);
-                adapter.filter(editSearch.getText().toString());
-            }
+            layoutResults.setVisibility(View.VISIBLE);
+            adapter.filter(editSearch.getText().toString());
         });
 
         editSearch.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus && currentSelectedProduct == null) {
+            if (hasFocus) {
                 layoutResults.setVisibility(View.VISIBLE);
                 adapter.filter(editSearch.getText().toString());
             }
@@ -152,6 +151,11 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String query = s.toString();
+                if (currentSelectedProduct != null && !query.equals(currentSelectedProduct.getName())) {
+                    currentSelectedProduct = null;
+                    layoutItemDetails.setVisibility(View.GONE);
+                }
+
                 if (currentSelectedProduct == null) {
                     layoutResults.setVisibility(View.VISIBLE);
                     adapter.filter(query);
@@ -167,14 +171,13 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         billingViewModel = new ViewModelProvider(requireActivity()).get(BillingViewModel.class);
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         productViewModel.init(requireContext());
 
         observeViewModel();
-        
         refreshProducts();
         productViewModel.fetchCategories();
     }
@@ -190,8 +193,9 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
 
         billingViewModel.getCartItems().observe(getViewLifecycleOwner(), items -> {
             addedItemAdapter.setItems(items);
-            layoutAddedItems.setVisibility(items != null && !items.isEmpty() ? View.GONE : View.GONE);
             updateSubmitButton(items != null ? items.size() : 0);
+            layoutAddedItems.setVisibility(items != null && !items.isEmpty() ? View.VISIBLE : View.GONE);
+
         });
     }
 
@@ -200,7 +204,6 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
         currentSelectedProduct = product;
         editSearch.setText(product.getName());
         editRate.setText(String.valueOf(product.getSellPrice()));
-        
         layoutResults.setVisibility(View.GONE);
         layoutItemDetails.setVisibility(View.VISIBLE);
         editQuantity.requestFocus();
