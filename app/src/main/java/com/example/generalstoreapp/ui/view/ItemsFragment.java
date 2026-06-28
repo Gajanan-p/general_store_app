@@ -130,6 +130,7 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
         layoutItemDetails.setVisibility(View.GONE);
         layoutResults.setVisibility(View.VISIBLE);
         editSearch.requestFocus();
+        updateSubmitButton();
     }
 
     private void setupSearchAndFilter() {
@@ -154,6 +155,7 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
                 if (currentSelectedProduct != null && !query.equals(currentSelectedProduct.getName())) {
                     currentSelectedProduct = null;
                     layoutItemDetails.setVisibility(View.GONE);
+                    updateSubmitButton();
                 }
 
                 if (currentSelectedProduct == null) {
@@ -193,9 +195,8 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
 
         billingViewModel.getCartItems().observe(getViewLifecycleOwner(), items -> {
             addedItemAdapter.setItems(items);
-            updateSubmitButton(items != null ? items.size() : 0);
+            updateSubmitButton();
             layoutAddedItems.setVisibility(items != null && !items.isEmpty() ? View.VISIBLE : View.GONE);
-
         });
     }
 
@@ -207,10 +208,16 @@ public class ItemsFragment extends Fragment implements ProductAdapter.OnProductA
         layoutResults.setVisibility(View.GONE);
         layoutItemDetails.setVisibility(View.VISIBLE);
         editQuantity.requestFocus();
+        updateSubmitButton();
     }
 
-    private void updateSubmitButton(int count) {
-        if (btnSubmit != null) {
+    private void updateSubmitButton() {
+        if (btnSubmit != null && billingViewModel != null) {
+            List<CartItem> items = billingViewModel.getCartItems().getValue();
+            int count = (items != null ? items.size() : 0);
+            if (currentSelectedProduct != null) {
+                count++;
+            }
             btnSubmit.setText("Submit (" + count + " items)");
         }
     }

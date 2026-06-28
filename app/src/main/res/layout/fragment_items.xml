@@ -131,7 +131,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Rate (Price/Unit)">
+                        android:hint="@string/rate_price_unit">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_rate"
@@ -146,14 +146,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:layout_weight="1"
-                        android:hint="Tax">
+                        android:hint="@string/tax">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_tax"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="false"
-                            android:text="Without Tax" />
+                            android:text="@string/without_tax" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 

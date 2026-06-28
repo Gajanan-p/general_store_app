@@ -11,4 +11,7 @@
     <string name="new_category">New Category</string>
     <string name="user_icon">User Icon</string>
     <string name="new_invoice">New Invoice</string>
+    <string name="without_tax">Without Tax</string>
+    <string name="tax">Tax</string>
+    <string name="rate_price_unit">Rate (Price/Unit)</string>
 </resources>
