@@ -47,7 +47,7 @@ public class CustomersViewModel extends ViewModel {
         return successLiveData;
     }
 
-    public void fetchCustomers(String q, int isActive, boolean isRefresh) {
+    public void fetchCustomers(String q, Boolean isActive, boolean isRefresh) {
         if (isRefresh) {
             currentOffset = 0;
             isLastPage = false;
@@ -58,17 +58,18 @@ public class CustomersViewModel extends ViewModel {
         loadingLiveData.setValue(true);
         customerRepository.getCustomers(q, isActive, LIMIT, currentOffset, result -> {
             loadingLiveData.setValue(false);
-            if (result.status == ApiResult.Status.SUCCESS) {
+            if (result.status == ApiResult.Status.SUCCESS && result.data != null) {
+                List<GetCustomerDataModel> items = result.data.getItems();
                 List<GetCustomerDataModel> currentList = customersLiveData.getValue();
                 if (isRefresh || currentList == null) {
-                    customersLiveData.setValue(result.data);
+                    customersLiveData.setValue(items);
                 } else {
                     List<GetCustomerDataModel> newList = new ArrayList<>(currentList);
-                    newList.addAll(result.data);
+                    newList.addAll(items);
                     customersLiveData.setValue(newList);
                 }
                 
-                if (result.data.size() < LIMIT) {
+                if (items.size() < LIMIT) {
                     isLastPage = true;
                 } else {
                     currentOffset += LIMIT;

@@ -4,77 +4,45 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class GetCategoriesModel {
-
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("store_id")
+    @Expose
+    private Integer storeId;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("created_date")
+    @SerializedName("is_active")
     @Expose
-    private String createdDate;
-    @SerializedName("updated_date")
+    private Boolean isActive;
+    @SerializedName("is_deleted")
     @Expose
-    private String updatedDate;
+    private Boolean isDeleted;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public GetCategoriesModel() {
-    }
-
-    public GetCategoriesModel(Integer id, String name, String description, String createdDate, String updatedDate) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(String updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public Integer getStoreId() { return storeId; }
+    public void setStoreId(Integer storeId) { this.storeId = storeId; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public Boolean getIsDeleted() { return isDeleted; }
+    public void setIsDeleted(Boolean isDeleted) { this.isDeleted = isDeleted; }
+    public String getCreatedAt() { return createdAt; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public String getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
 }

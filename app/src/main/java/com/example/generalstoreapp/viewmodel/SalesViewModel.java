@@ -61,9 +61,9 @@ public class SalesViewModel extends ViewModel {
     }
 
     public void fetchCustomers() {
-        customerRepository.getCustomers("", 1, 100, 0, result -> {
-            if (result.status == ApiResult.Status.SUCCESS) {
-                customersLiveData.setValue(result.data);
+        customerRepository.getCustomers("", true, 100, 0, result -> {
+            if (result.status == ApiResult.Status.SUCCESS && result.data != null) {
+                customersLiveData.setValue(result.data.getItems());
             }
         });
     }

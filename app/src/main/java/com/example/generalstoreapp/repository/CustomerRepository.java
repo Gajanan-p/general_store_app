@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.generalstoreapp.models.AddCustomerRequest;
 import com.example.generalstoreapp.models.AddCustomerResponse;
+import com.example.generalstoreapp.models.CustomerListResponse;
 import com.example.generalstoreapp.models.DeleteResponse;
 import com.example.generalstoreapp.models.GetCustomerDataModel;
 import com.example.generalstoreapp.services.ApiService;
@@ -21,8 +22,8 @@ public class CustomerRepository {
         api = RetrofitClient.getApiService(context);
     }
 
-    public void getCustomers(String q, int isActive, int limit, int offset,
-                             ApiCallback<ArrayList<GetCustomerDataModel>> callback) {
+    public void getCustomers(String q, Boolean isActive, int limit, int offset,
+                             ApiCallback<CustomerListResponse> callback) {
         ApiExecutor.execute(
                 api.getCustomersListDataFromServer(q, isActive, limit, offset),
                 callback

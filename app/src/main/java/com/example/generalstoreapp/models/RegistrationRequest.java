@@ -1,105 +1,58 @@
 package com.example.generalstoreapp.models;
 
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class RegistrationRequest {
-
-    @SerializedName("first_name")
+    @SerializedName("store_name")
     @Expose
-    private String firstName;
-    @SerializedName("middle_name")
+    private String storeName;
+    @SerializedName("owner_name")
     @Expose
-    private String middleName;
-    @SerializedName("last_name")
+    private String ownerName;
+    @SerializedName("phone")
     @Expose
-    private String lastName;
+    private String phone;
     @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("mobile")
-    @Expose
-    private String mobile;
     @SerializedName("password")
     @Expose
     private String password;
-    @SerializedName("dob")
+    @SerializedName("address")
     @Expose
-    private String dob;
+    private String address;
+    @SerializedName("city")
+    @Expose
+    private String city;
+    @SerializedName("state")
+    @Expose
+    private String state;
+    @SerializedName("pincode")
+    @Expose
+    private String pincode;
+    @SerializedName("gst_number")
+    @Expose
+    private String gstNumber;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public RegistrationRequest() {
-    }
-
-    public RegistrationRequest(String firstName, String middleName, String lastName, String email, String mobile, String password, String dob) {
-        super();
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.email = email;
-        this.mobile = mobile;
-        this.password = password;
-        this.dob = dob;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
+    public String getStoreName() { return storeName; }
+    public void setStoreName(String storeName) { this.storeName = storeName; }
+    public String getOwnerName() { return ownerName; }
+    public void setOwnerName(String ownerName) { this.ownerName = ownerName; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
+    public String getState() { return state; }
+    public void setState(String state) { this.state = state; }
+    public String getPincode() { return pincode; }
+    public void setPincode(String pincode) { this.pincode = pincode; }
+    public String getGstNumber() { return gstNumber; }
+    public void setGstNumber(String gstNumber) { this.gstNumber = gstNumber; }
 }

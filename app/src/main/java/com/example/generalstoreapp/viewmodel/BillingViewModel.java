@@ -73,9 +73,9 @@ public class BillingViewModel extends ViewModel {
     public LiveData<Boolean> getSuccess() { return success; }
 
     public void fetchCustomers(String q) {
-        customerRepository.getCustomers(q, 1, 50, 0, result -> {
-            if (result.status == ApiResult.Status.SUCCESS) {
-                customersLiveData.setValue(result.data);
+        customerRepository.getCustomers(q, true, 50, 0, result -> {
+            if (result.status == ApiResult.Status.SUCCESS && result.data != null) {
+                customersLiveData.setValue(result.data.getItems());
             }
         });
     }

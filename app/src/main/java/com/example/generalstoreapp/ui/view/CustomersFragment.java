@@ -78,7 +78,7 @@ public class CustomersFragment extends Fragment implements CustomerAdapter.OnCus
 
     private void refreshCustomers() {
         if (viewModel != null) {
-            viewModel.fetchCustomers(currentSearch, 1, true);
+            viewModel.fetchCustomers(currentSearch, true, true);
         }
     }
 
@@ -95,7 +95,7 @@ public class CustomersFragment extends Fragment implements CustomerAdapter.OnCus
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (!recyclerView.canScrollVertically(1)) {
-                    viewModel.fetchCustomers(currentSearch, 1, false);
+                    viewModel.fetchCustomers(currentSearch, true, false);
                 }
             }
         });
@@ -150,8 +150,8 @@ public class CustomersFragment extends Fragment implements CustomerAdapter.OnCus
             editCity.setText(existingCustomer.getCity());
             editState.setText(existingCustomer.getState());
             editPincode.setText(existingCustomer.getPincode());
-            editBalance.setText(String.valueOf(existingCustomer.getOpeningBalance()));
-            switchActive.setChecked(existingCustomer.getIsActive() == 1);
+            editBalance.setText(existingCustomer.getOpeningBalance());
+            switchActive.setChecked(Boolean.TRUE.equals(existingCustomer.getIsActive()));
         }
 
         AlertDialog dialog = builder.create();
@@ -165,8 +165,8 @@ public class CustomersFragment extends Fragment implements CustomerAdapter.OnCus
             request.setCity(editCity.getText().toString());
             request.setState(editState.getText().toString());
             request.setPincode(editPincode.getText().toString());
-            request.setOpeningBalance(parseInt(editBalance.getText().toString()));
-            request.setIsActive(switchActive.isChecked() ? 1 : 0);
+            request.setOpeningBalance(parseDouble(editBalance.getText().toString()));
+            request.setIsActive(switchActive.isChecked());
 
             if (existingCustomer == null) {
                 viewModel.createCustomer(request);
@@ -184,6 +184,14 @@ public class CustomersFragment extends Fragment implements CustomerAdapter.OnCus
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
             return 0;
+        }
+    }
+
+    private double parseDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return 0.0;
         }
     }
 

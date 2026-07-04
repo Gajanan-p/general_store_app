@@ -1,14 +1,16 @@
 package com.example.generalstoreapp.models;
 
-
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class GetRoleModel {
-
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("code")
+    @Expose
+    private String code;
     @SerializedName("name")
     @Expose
     private String name;
@@ -17,89 +19,26 @@ public class GetRoleModel {
     private String description;
     @SerializedName("is_system")
     @Expose
-    private Integer isSystem;
-    @SerializedName("is_deleted")
+    private Boolean isSystem;
+    @SerializedName("is_active")
     @Expose
-    private Integer isDeleted;
-    @SerializedName("created_date")
+    private Boolean isActive;
+    @SerializedName("permissions")
     @Expose
-    private String createdDate;
-    @SerializedName("updated_date")
-    @Expose
-    private String updatedDate;
+    private List<PermissionsModel> permissions;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public GetRoleModel() {
-    }
-
-    public GetRoleModel(Integer id, String name, String description, Integer isSystem, Integer isDeleted, String createdDate, String updatedDate) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.isSystem = isSystem;
-        this.isDeleted = isDeleted;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getIsSystem() {
-        return isSystem;
-    }
-
-    public void setIsSystem(Integer isSystem) {
-        this.isSystem = isSystem;
-    }
-
-    public Integer getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Integer isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(String updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public Boolean getIsSystem() { return isSystem; }
+    public void setIsSystem(Boolean isSystem) { this.isSystem = isSystem; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public List<PermissionsModel> getPermissions() { return permissions; }
+    public void setPermissions(List<PermissionsModel> permissions) { this.permissions = permissions; }
 }

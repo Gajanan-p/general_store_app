@@ -15,7 +15,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     private static ApiService apiService;
-    private static final String BASE_URL = "https://api-dev.genstore.cloud/";
+
+//    private static final String BASE_URL = "https://api-dev.genstore.cloud/";
+    private static final String BASE_URL ="https://api-dev.genstore.cloud/";
 
     public static ApiService getApiService(Context context) {
         if (apiService == null) {

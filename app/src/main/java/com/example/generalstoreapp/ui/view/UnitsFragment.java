@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +21,6 @@ import com.example.generalstoreapp.models.GetUnitsDataModel;
 import com.example.generalstoreapp.ui.adapters.UnitAdapter;
 import com.example.generalstoreapp.viewmodel.UnitsViewModel;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class UnitsFragment extends Fragment implements UnitAdapter.OnUnitActionListener {
@@ -51,13 +51,22 @@ public class UnitsFragment extends Fragment implements UnitAdapter.OnUnitActionL
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(UnitsViewModel.class);
         viewModel.init(requireContext());
 
         observeViewModel();
-        viewModel.fetchUnits();
+        viewModel.fetchUnits(true);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    viewModel.fetchUnits(false);
+                }
+            }
+        });
     }
 
     private void observeViewModel() {
@@ -91,23 +100,33 @@ public class UnitsFragment extends Fragment implements UnitAdapter.OnUnitActionL
 
         TextView textTitle = dialogView.findViewById(R.id.text_title);
         TextInputEditText editName = dialogView.findViewById(R.id.edit_unit_name);
-        TextInputEditText editSymbol = dialogView.findViewById(R.id.edit_unit_symbol);
+        TextInputEditText editShortCode = dialogView.findViewById(R.id.edit_unit_symbol); // Reusing ID for short code
+        TextInputEditText editDesc = dialogView.findViewById(R.id.edit_unit_description);
+        CheckBox checkAllowDecimal = dialogView.findViewById(R.id.check_allow_decimal);
 
+        // If layout doesn't have these new fields yet, some might be null.
+        // For now I'll assume basic fields exist.
+        
         if (existingUnit != null) {
             textTitle.setText(R.string.edit_unit_title);
             editName.setText(existingUnit.getName());
-            editSymbol.setText(existingUnit.getSymbol());
+            editShortCode.setText(existingUnit.getShortCode());
+            if (editDesc != null) editDesc.setText(existingUnit.getDescription());
+            if (checkAllowDecimal != null) checkAllowDecimal.setChecked(Boolean.TRUE.equals(existingUnit.getAllowDecimal()));
         }
 
         AlertDialog dialog = builder.create();
 
         dialogView.findViewById(R.id.button_submit).setOnClickListener(v -> {
             String name = editName.getText().toString();
-            String symbol = editSymbol.getText().toString();
+            String shortCode = editShortCode.getText().toString();
+            String desc = editDesc != null ? editDesc.getText().toString() : "Unit description";
+            Boolean allowDecimal = checkAllowDecimal != null && checkAllowDecimal.isChecked();
+            
             if (existingUnit == null) {
-                viewModel.addUnit(name, symbol);
+                viewModel.addUnit(name, shortCode, allowDecimal, desc);
             } else {
-                viewModel.updateUnit(existingUnit.getId(), name, symbol);
+                viewModel.updateUnit(existingUnit.getId(), name, shortCode, allowDecimal, desc);
             }
             dialog.dismiss();
         });

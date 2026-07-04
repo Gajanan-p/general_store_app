@@ -44,7 +44,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         GetUnitsDataModel unit = units.get(position);
         holder.textName.setText(unit.getName());
-        holder.textSymbol.setText(unit.getSymbol());
+        holder.textSymbol.setText(unit.getShortCode());
 
         holder.itemView.setOnClickListener(v -> listener.onEdit(unit));
         holder.btnDelete.setOnClickListener(v -> listener.onDelete(unit));

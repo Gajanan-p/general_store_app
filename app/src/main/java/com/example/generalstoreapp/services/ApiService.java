@@ -1,9 +1,5 @@
 package com.example.generalstoreapp.services;
 
-
-
-
-
 import com.example.generalstoreapp.models.AddCustomerRequest;
 import com.example.generalstoreapp.models.AddCustomerResponse;
 import com.example.generalstoreapp.models.AddProductRequest;
@@ -13,11 +9,11 @@ import com.example.generalstoreapp.models.AddPurchasesResponse;
 import com.example.generalstoreapp.models.AddSuppliersRequest;
 import com.example.generalstoreapp.models.AddSuppliersResponse;
 import com.example.generalstoreapp.models.AddUsersByRoleRequest;
-import com.example.generalstoreapp.models.AddUsersByRoleResponse;
 import com.example.generalstoreapp.models.BillingRequest;
 import com.example.generalstoreapp.models.BillingResponse;
 import com.example.generalstoreapp.models.CategoriesRequest;
-import com.example.generalstoreapp.models.CategoriesResponse;
+import com.example.generalstoreapp.models.CategoriesListResponse;
+import com.example.generalstoreapp.models.CustomerListResponse;
 import com.example.generalstoreapp.models.DeleteResponse;
 import com.example.generalstoreapp.models.DeleteUnitsResponse;
 import com.example.generalstoreapp.models.GetBillingDataModel;
@@ -31,247 +27,276 @@ import com.example.generalstoreapp.models.GetUnitsDataModel;
 import com.example.generalstoreapp.models.GetUsersByPermissionsModel;
 import com.example.generalstoreapp.models.GetUsersByRoleModel;
 import com.example.generalstoreapp.models.GetUsersModel;
+import com.example.generalstoreapp.models.HealthResponse;
 import com.example.generalstoreapp.models.LoginModel;
 import com.example.generalstoreapp.models.LoginRequestModel;
 import com.example.generalstoreapp.models.PermissionsModel;
+import com.example.generalstoreapp.models.PermissionsResponse;
+import com.example.generalstoreapp.models.RbacMeModel;
 import com.example.generalstoreapp.models.RefreshRequest;
 import com.example.generalstoreapp.models.RefreshResponse;
 import com.example.generalstoreapp.models.RegistrationRequest;
 import com.example.generalstoreapp.models.RegistrationResponse;
 import com.example.generalstoreapp.models.RoleRequest;
 import com.example.generalstoreapp.models.RoleResponse;
+import com.example.generalstoreapp.models.RolesListResponse;
+import com.example.generalstoreapp.models.Store;
 import com.example.generalstoreapp.models.UnitsRequest;
-import com.example.generalstoreapp.models.UnitsResponse;
+import com.example.generalstoreapp.models.UnitsListResponse;
+import com.example.generalstoreapp.models.Users;
+import com.example.generalstoreapp.models.UsersListResponse;
 import com.example.generalstoreapp.models.UsersModel;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 
 public interface ApiService {
 
-//    Login service
-    @Headers("Content-Type: application/json")
-    @POST("auth/login")
-    Call<LoginModel> fetchLoginDataFromServer(@Body LoginRequestModel requestModel);
+//    Health
+    @GET("api/v1/health")
+    Call<HealthResponse> healthCheck();
 
-//   Handled Refresh token
+//    Authentication services
     @Headers("Content-Type: application/json")
-    @POST("auth/refresh")
-    Call<RefreshResponse> refreshToken(@Body RefreshRequest request);
-
-//    Registration service
-    @Headers("Content-Type: application/json")
-    @POST("auth/register")
+    @POST("api/v1/auth/register")
     Call<RegistrationResponse> callRegistrationDataFromServer(@Body RegistrationRequest request);
 
-
-//    Role services
     @Headers("Content-Type: application/json")
-    @GET("roles")
+    @POST("api/v1/auth/login")
+    Call<LoginModel> fetchLoginDataFromServer(@Body LoginRequestModel requestModel);
+
+    @FormUrlEncoded
+    @POST("api/v1/auth/token")
+    Call<LoginModel> loginWithToken(
+            @Field("grant_type") String grantType,
+            @Field("username") String username,
+            @Field("password") String password,
+            @Field("scope") String scope,
+            @Field("client_id") String clientId,
+            @Field("client_secret") String clientSecret
+    );
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/auth/refresh")
+    Call<RefreshResponse> refreshToken(@Body RefreshRequest request);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/auth/logout")
+    Call<DeleteResponse> logout(@Body RefreshRequest request);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/v1/auth/me")
+    Call<UsersModel> callUsersDataFromServer();
+
+//    Store
+    @GET("api/v1/store/me")
+    Call<Store> getMyStore();
+
+//    RBAC
+    @GET("api/v1/rbac/me")
+    Call<RbacMeModel> getMyPermissions();
+
+    @GET("api/v1/rbac/permissions")
+    Call<PermissionsResponse> listPermissions(@Query("limit") Integer limit, @Query("offset") Integer offset);
+
+    @GET("api/v1/rbac/roles")
+    Call<RolesListResponse> listRoles();
+
+    @GET("api/v1/rbac/roles/{role_id}")
+    Call<GetRoleModel> getRole(@Path("role_id") int roleId);
+
+    @PUT("api/v1/rbac/roles/{role_id}/permissions")
+    Call<RoleResponse> updateRolePermissions(@Path("role_id") int roleId, @Body RoleRequest request);
+
+//    Users services
+    @Headers("Content-Type: application/json")
+    @POST("api/v1/users/staff")
+    Call<Users> createStaffUser(@Body AddUsersByRoleRequest request);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/v1/users")
+    Call<UsersListResponse> listUsers(@Query("limit") Integer limit, @Query("offset") Integer offset);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/v1/users/{user_id}")
+    Call<Users> getUser(@Path("user_id") int userId);
+
+    @Headers("Content-Type: application/json")
+    @PUT("api/v1/users/staff/{user_id}")
+    Call<Users> updateStaffUser(@Path("user_id") int userId, @Body AddUsersByRoleRequest request);
+
+    @Headers("Content-Type: application/json")
+    @DELETE("api/v1/users/staff/{user_id}")
+    Call<DeleteResponse> deleteStaffUser(@Path("user_id") int userId);
+
+//    Old/Compatibility Endpoints (keeping some but using updated models where possible)
+    @Headers("Content-Type: application/json")
+    @GET("api/v1/rbac/roles")
     Call<ArrayList<GetRoleModel>> callRoleDataFromServer();
 
     @Headers("Content-Type: application/json")
-    @POST("roles")
+    @POST("api/v1/rbac/roles")
     Call<RoleResponse> callAddRoleDataFromServer(@Body RoleRequest request);
 
     @Headers("Content-Type: application/json")
-    @POST("roles")
-    Call<RoleResponse> callUpdateRoleDataFromServer(@Body RoleRequest request);
-
-    @Headers("Content-Type: application/json")
-    @POST("roles")
-    Call<RoleResponse> callDeleteRoleDataFromServer(@Body RoleRequest request);
-
-
-//   ME Users services
-    @Headers("Content-Type: application/json")
-    @GET("me")
-    Call<UsersModel> callUsersDataFromServer();
-
-
-//   Users services
-    @Headers("Content-Type: application/json")
-    @GET("users")
+    @GET("api/v1/users")
     Call<ArrayList<GetUsersModel>> getUsersDataFromServer();
 
     @Headers("Content-Type: application/json")
-    @GET("users/{user_id}/roles")
+    @GET("api/v1/users/{user_id}/roles")
     Call<GetUsersByRoleModel> getUsersByRoleDataFromServer(@Path("user_id") int userId);
 
     @Headers("Content-Type: application/json")
-    @GET("users/{user_id}/permissions")
+    @GET("api/v1/users/{user_id}/permissions")
     Call<GetUsersByPermissionsModel> getUsersByPermissionDataFromServer(@Path("user_id") int userId);
-
-    @Headers("Content-Type: application/json")
-    @POST("users/{user_id}/roles")
-    Call<AddUsersByRoleResponse> addUsersByRoleDataFromServer(@Path("user_id") int userId,
-                                                              @Body AddUsersByRoleRequest request);
-    @Headers("Content-Type: application/json")
-    @PUT("users/{user_id}")
-    Call<AddUsersByRoleResponse> updateUsersDataFromServer(@Path("user_id") int userId,
-                                                           @Body AddUsersByRoleRequest request);
-    @Headers("Content-Type: application/json")
-    @DELETE("users/{user_id}")
-    Call<DeleteResponse> deleteUsersDataFromServer(@Path("user_id") int userId);
-
-//   permissions
-
-    @Headers("Content-Type: application/json")
-    @GET("permissions")
-    Call<PermissionsModel> getPermissionsModelDataFromServer();
-
-
 
 //    Categories
     @Headers("Content-Type: application/json")
-    @GET("categories")
-    Call<ArrayList<GetCategoriesModel>> getCategoryDataFromServer();
+    @GET("api/v1/product-categories")
+    Call<CategoriesListResponse> getCategoryDataFromServer(@Query("limit") Integer limit, @Query("offset") Integer offset);
 
     @Headers("Content-Type: application/json")
-    @GET("categories/{category_id}")
+    @GET("api/v1/product-categories/{category_id}")
     Call<GetCategoriesModel> getCategoryByIdDataFromServer(@Path("category_id") int category_id);
 
     @Headers("Content-Type: application/json")
-    @POST("categories")
-    Call<CategoriesResponse> saveCategoryDataFromServer(@Body CategoriesRequest request);
+    @POST("api/v1/product-categories")
+    Call<GetCategoriesModel> saveCategoryDataFromServer(@Body CategoriesRequest request);
 
     @Headers("Content-Type: application/json")
-    @PUT("categories/{category_id}")
-    Call<CategoriesResponse> updateCategoryDataFromServer(@Path("category_id") int category_id,
+    @PUT("api/v1/product-categories/{category_id}")
+    Call<GetCategoriesModel> updateCategoryDataFromServer(@Path("category_id") int category_id,
                                                        @Body CategoriesRequest request);
     @Headers("Content-Type: application/json")
-    @DELETE("categories/{category_id}")
+    @DELETE("api/v1/product-categories/{category_id}")
     Call<DeleteResponse> deleteCategoryDataFromServer(@Path("category_id") int category_id);
-
-
 
 //    Units
     @Headers("Content-Type: application/json")
-    @GET("units")
-    Call<ArrayList<GetUnitsDataModel>> getUnitsDataFromServer();
+    @GET("api/v1/product-units")
+    Call<UnitsListResponse> getUnitsDataFromServer(@Query("limit") Integer limit, @Query("offset") Integer offset);
 
     @Headers("Content-Type: application/json")
-    @GET("units/{unit_id}")
+    @GET("api/v1/product-units/{unit_id}")
     Call<GetUnitsDataModel> getUnitsByIdDataFromServer(@Path("unit_id") int unit_id);
 
     @Headers("Content-Type: application/json")
-    @POST("units")
-    Call<UnitsResponse> saveUnitsDataFromServer(@Body UnitsRequest request);
+    @POST("api/v1/product-units")
+    Call<GetUnitsDataModel> saveUnitsDataFromServer(@Body UnitsRequest request);
 
     @Headers("Content-Type: application/json")
-    @PUT("units/{unit_id}")
-    Call<UnitsResponse> updateUnitsDataFromServer(@Path("unit_id") int unit_id,
+    @PUT("api/v1/product-units/{unit_id}")
+    Call<GetUnitsDataModel> updateUnitsDataFromServer(@Path("unit_id") int unit_id,
                                                   @Body UnitsRequest request);
 
     @Headers("Content-Type: application/json")
-    @DELETE("units/{unit_id}")
+    @DELETE("api/v1/product-units/{unit_id}")
     Call<DeleteUnitsResponse> deleteUnitsDataFromServer(@Path("unit_id") int unit_id);
-
-
 
 //    Products
     @Headers("Content-Type: application/json")
-    @GET("products")
+    @GET("api/v1/products")
     Call<ArrayList<GetProductDataModel>> getProductListDataFromServer(@Query("is_active") int isActive,
                                                                       @Query("limit") int limit,
-                                                                      @Query("offset") int offset);//@Query("q") String q,@Query("category_id") int categoryId,
+                                                                      @Query("offset") int offset);
+
+    @GET("api/v1/products/alerts/low-stock")
+    Call<ArrayList<GetProductDataModel>> getLowStockProducts();
 
     @Headers("Content-Type: application/json")
-    @GET("products/by-barcode/{barcode}")
+    @GET("api/v1/products/by-barcode/{barcode}")
     Call<GetProductDataModel> getProductByBarcodeDataFromServer(@Path("barcode") String barcode);
 
     @Headers("Content-Type: application/json")
-    @GET("products/{product_id}")
+    @GET("api/v1/products/{product_id}")
     Call<GetProductDataModel> getProductByProductIdDataFromServer(@Path("product_id") int product_id);
 
     @Headers("Content-Type: application/json")
-    @POST("products")
+    @POST("api/v1/products")
     Call<AddProductResponse> saveProductDataFromServer(@Body AddProductRequest request);
-//@POST("products")
-//Call<AddProductResponse> saveProductDataFromServer(
-//        @Header("Authorization") String token,
-//        @Header("accept") String accept,
-//        @Body AddProductRequest request
-//);
 
     @Headers("Content-Type: application/json")
-    @PUT("products/{product_id}")
+    @PUT("api/v1/products/{product_id}")
     Call<AddProductResponse> updateProductDataFromServer(@Path("product_id") int product_id,
                                                   @Body AddProductRequest request);
 
     @Headers("Content-Type: application/json")
-    @DELETE("products/{product_id}")
+    @DELETE("api/v1/products/{product_id}")
     Call<DeleteResponse> deleteProductDataFromServer(@Path("product_id") int product_id);
 
+    @GET("api/v1/products/{product_id}/price-history")
+    Call<ResponseBody> getProductPriceHistory(@Path("product_id") int productId);
 
+    @PATCH("api/v1/products/{product_id}/stock")
+    Call<AddProductResponse> updateProductStock(@Path("product_id") int productId, @Body Object request);
 
 //    Suppliers
-
     @Headers("Content-Type: application/json")
-    @GET("suppliers")
+    @GET("api/v1/suppliers")
     Call<ArrayList<GetSuppliersDataModel>> getSupplierListDataFromServer(@Query("q") String q,
                                                                          @Query("is_active") int isActive,
                                                                          @Query("limit") int limit,
                                                                          @Query("offset") int offset);
 
     @Headers("Content-Type: application/json")
-    @GET("suppliers/{supplier_id}")
+    @GET("api/v1/suppliers/{supplier_id}")
     Call<GetSuppliersDataModel> getSuppliersByIdDataFromServer(@Path("supplier_id") int supplier_id);
 
     @Headers("Content-Type: application/json")
-    @POST("suppliers")
+    @POST("api/v1/suppliers")
     Call<AddSuppliersResponse> saveSuppliersDataFromServer(@Body AddSuppliersRequest request);
 
     @Headers("Content-Type: application/json")
-    @PUT("suppliers/{supplier_id}")
+    @PUT("api/v1/suppliers/{supplier_id}")
     Call<AddSuppliersResponse> updateSupplierDataFromServer(@Path("supplier_id") int supplier_id,
                                                   @Body AddSuppliersRequest request);
 
     @Headers("Content-Type: application/json")
-    @DELETE("suppliers/{supplier_id}")
+    @DELETE("api/v1/suppliers/{supplier_id}")
     Call<DeleteResponse> deleteSupplierDataFromServer(@Path("supplier_id") int supplier_id);
 
-
 //    Customers
-
     @Headers("Content-Type: application/json")
-    @GET("customers")
-    Call<ArrayList<GetCustomerDataModel>> getCustomersListDataFromServer(@Query("q") String q,
-                                                                         @Query("is_active") int isActive,
+    @GET("api/v1/customers")
+    Call<CustomerListResponse> getCustomersListDataFromServer(@Query("q") String q,
+                                                                         @Query("is_active") Boolean isActive,
                                                                          @Query("limit") int limit,
                                                                          @Query("offset") int offset);
 
     @Headers("Content-Type: application/json")
-    @GET("customers/{customer_id}")
+    @GET("api/v1/customers/{customer_id}")
     Call<GetCustomerDataModel> getCustomersByIdDataFromServer(@Path("customer_id") int customer_id);
 
     @Headers("Content-Type: application/json")
-    @POST("customers")
+    @POST("api/v1/customers")
     Call<AddCustomerResponse> saveCustomersDataFromServer(@Body AddCustomerRequest request);
 
     @Headers("Content-Type: application/json")
-    @PUT("customers/{customer_id}")
+    @PUT("api/v1/customers/{customer_id}")
     Call<AddCustomerResponse> updateCustomersDataFromServer(@Path("customer_id") int customer_id,
                                                           @Body AddCustomerRequest request);
 
     @Headers("Content-Type: application/json")
-    @DELETE("customers/{customer_id}")
+    @DELETE("api/v1/customers/{customer_id}")
     Call<DeleteResponse> deleteCustomersDataFromServer(@Path("customer_id") int customer_id);
 
-//    Purchases
-
+//    Purchase Invoices
     @Headers("Content-Type: application/json")
-    @GET("purchases")
+    @GET("api/v1/purchase-invoices")
     Call<ArrayList<GetPurchasesDataModel>> getPurchasesListDataFromServer(@Query("supplier_id") int supplierId,
                                                                           @Query("from_date") String fromDate,
                                                                           @Query("to_date") String toDate,
@@ -280,54 +305,141 @@ public interface ApiService {
                                                                           @Query("offset") int offset);
 
     @Headers("Content-Type: application/json")
-    @GET("purchases/{purchase_id}")
-    Call<GetPurchasesDataModel> getPurchasesByIdDataFromServer(@Path("purchase_id") int purchase_id);
+    @GET("api/v1/purchase-invoices/{purchase_invoice_id}")
+    Call<GetPurchasesDataModel> getPurchasesByIdDataFromServer(@Path("purchase_invoice_id") int purchase_id);
 
     @Headers("Content-Type: application/json")
-    @POST("purchases")
+    @POST("api/v1/purchase-invoices")
     Call<AddPurchasesResponse> savePurchasesDataFromServer(@Body AddPurchasesRequest request);
 
     @Headers("Content-Type: application/json")
-    @PUT("purchases/{purchase_id}")
-    Call<AddPurchasesResponse> updatePurchasesDataFromServer(@Path("purchase_id") int purchase_id,
-                                                            @Body AddPurchasesRequest request);
+    @POST("api/v1/purchase-invoices/{purchase_invoice_id}/cancel")
+    Call<DeleteResponse> cancelPurchaseInvoice(@Path("purchase_invoice_id") int purchaseId);
 
+//    Sales Invoices
     @Headers("Content-Type: application/json")
-    @DELETE("purchases/{purchase_id}")
-    Call<DeleteResponse> deletePurchasesDataFromServer(@Path("purchase_id") int purchase_id);
-
-//    Billing
-
-    @Headers("Content-Type: application/json")
-    @GET("billing")
+    @GET("api/v1/sales-invoices")
     Call<ArrayList<GetBillingDataModel>> getBillingListDataFromServer(@Query("customer_id") Integer customerId,
                                                                       @Query("from_date") String fromDate,
                                                                       @Query("to_date") String toDate,
                                                                       @Query("limit") int limit,
                                                                       @Query("offset") int offset);
 
-//    @Headers("Content-Type: application/json")
-//    @GET("billing/{purchase_id}")
-//    Call<GetCustomerDataModel> getPurchasesByIdDataFromServer(@Path("purchase_id") int purchase_id);
+    @Headers("Content-Type: application/json")
+    @GET("api/v1/sales-invoices/{invoice_id}")
+    Call<GetBillingDataModel> getBillingByIdDataFromServer(@Path("invoice_id") int billingId);
 
     @Headers("Content-Type: application/json")
-    @GET("billing/{billing_id}")
-    Call<GetBillingDataModel> getBillingByIdDataFromServer(@Path("billing_id") int billingId);
+    @POST("api/v1/sales-invoices/{invoice_id}/cancel")
+    Call<BillingResponse> cancelBillingDataFromServer(@Path("invoice_id") int billingId);
 
     @Headers("Content-Type: application/json")
-    @POST("billing/{billing_id}/cancel")
-    Call<BillingResponse> cancelBillingDataFromServer(@Path("billing_id") int billingId);
-
-    @Headers("Content-Type: application/json")
-    @POST("billing")
+    @POST("api/v1/sales-invoices")
     Call<BillingResponse> createInvoiceDataFromServer(@Body BillingRequest request);
 
-//    @Headers("Content-Type: application/json")
-//    @PUT("purchases/{purchase_id}")
-//    Call<AddPurchasesResponse> updatePurchasesDataFromServer(@Path("purchase_id") int purchase_id,
-//                                                             @Body AddPurchasesRequest request);
-//
-//    @Headers("Content-Type: application/json")
-//    @DELETE("purchases/{purchase_id}")
-//    Call<DeleteResponse> deletePurchasesDataFromServer(@Path("purchase_id") int purchase_id);
+//    Payments
+    @POST("api/v1/payments")
+    Call<ResponseBody> createPayment(@Body Object request);
+
+    @GET("api/v1/payments")
+    Call<ResponseBody> listPayments();
+
+    @GET("api/v1/payments/{payment_id}")
+    Call<ResponseBody> getPayment(@Path("payment_id") int paymentId);
+
+    @DELETE("api/v1/payments/{payment_id}")
+    Call<DeleteResponse> cancelPayment(@Path("payment_id") int paymentId);
+
+//    Supplier Payments
+    @POST("api/v1/supplier-payments")
+    Call<ResponseBody> createSupplierPayment(@Body Object request);
+
+    @GET("api/v1/supplier-payments")
+    Call<ResponseBody> listSupplierPayments();
+
+    @GET("api/v1/supplier-payments/{supplier_payment_id}")
+    Call<ResponseBody> getSupplierPayment(@Path("supplier_payment_id") int supplierPaymentId);
+
+    @DELETE("api/v1/supplier-payments/{supplier_payment_id}")
+    Call<DeleteResponse> cancelSupplierPayment(@Path("supplier_payment_id") int supplierPaymentId);
+
+//    Expenses
+    @POST("api/v1/expenses")
+    Call<ResponseBody> createExpense(@Body Object request);
+
+    @GET("api/v1/expenses")
+    Call<ResponseBody> listExpenses();
+
+    @GET("api/v1/expenses/{expense_id}")
+    Call<ResponseBody> getExpense(@Path("expense_id") int expenseId);
+
+    @PUT("api/v1/expenses/{expense_id}")
+    Call<ResponseBody> updateExpense(@Path("expense_id") int expenseId, @Body Object request);
+
+    @DELETE("api/v1/expenses/{expense_id}")
+    Call<DeleteResponse> deleteExpense(@Path("expense_id") int expenseId);
+
+//    Exports
+    @Streaming
+    @GET("api/v1/exports/reports/sales.xlsx")
+    Call<ResponseBody> exportSalesReport();
+
+    @Streaming
+    @GET("api/v1/exports/reports/customer-outstanding.xlsx")
+    Call<ResponseBody> exportCustomerOutstandingReport();
+
+    @Streaming
+    @GET("api/v1/exports/reports/inventory.xlsx")
+    Call<ResponseBody> exportInventoryReport();
+
+    @Streaming
+    @GET("api/v1/exports/reports/payments.xlsx")
+    Call<ResponseBody> exportPaymentReport();
+
+    @Streaming
+    @GET("api/v1/exports/reports/expenses.xlsx")
+    Call<ResponseBody> exportExpenseReport();
+
+    @Streaming
+    @GET("api/v1/exports/reports/supplier-payments.xlsx")
+    Call<ResponseBody> exportSupplierPaymentReport();
+
+//    Print
+    @GET("api/v1/print/sales-invoices/{invoice_id}")
+    Call<ResponseBody> printSalesInvoice(@Path("invoice_id") int invoiceId);
+
+    @GET("api/v1/print/purchase-invoices/{purchase_invoice_id}")
+    Call<ResponseBody> printPurchaseInvoice(@Path("purchase_invoice_id") int purchaseInvoiceId);
+
+//    Dashboard
+    @GET("api/v1/dashboard/summary")
+    Call<ResponseBody> getDashboardSummary();
+
+    @GET("api/v1/dashboard/recent-invoices")
+    Call<ResponseBody> getRecentInvoices();
+
+    @GET("api/v1/dashboard/low-stock")
+    Call<ResponseBody> getDashboardLowStock();
+
+    @GET("api/v1/dashboard/top-customers")
+    Call<ResponseBody> getTopCustomers();
+
+//    Reports
+    @GET("api/v1/reports/sales")
+    Call<ResponseBody> getSalesReport();
+
+    @GET("api/v1/reports/customer-outstanding")
+    Call<ResponseBody> getCustomerOutstandingReport();
+
+    @GET("api/v1/reports/inventory")
+    Call<ResponseBody> getInventoryReport();
+
+    @GET("api/v1/reports/payments")
+    Call<ResponseBody> getPaymentReport();
+
+    @GET("api/v1/reports/expenses")
+    Call<ResponseBody> getExpenseReport();
+
+    @GET("api/v1/reports/supplier-payments")
+    Call<ResponseBody> getSupplierPaymentReport();
 }

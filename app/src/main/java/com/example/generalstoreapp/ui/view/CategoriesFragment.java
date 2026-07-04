@@ -59,7 +59,16 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.OnCa
         viewModel.init(requireContext());
 
         observeViewModel();
-        viewModel.fetchCategories();
+        viewModel.fetchCategories(true);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    viewModel.fetchCategories(false);
+                }
+            }
+        });
     }
 
     private void observeViewModel() {

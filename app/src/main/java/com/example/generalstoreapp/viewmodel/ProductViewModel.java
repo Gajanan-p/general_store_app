@@ -24,8 +24,8 @@ public class ProductViewModel extends ViewModel {
     private UnitsRepository unitsRepository;
 
     private final MutableLiveData<List<GetProductDataModel>> productsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<GetCategoriesModel>> categoriesLiveData = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<GetUnitsDataModel>> unitsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<GetCategoriesModel>> categoriesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<GetUnitsDataModel>> unitsLiveData = new MutableLiveData<>();
     
     private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loadingLiveData = new MutableLiveData<>();
@@ -47,11 +47,11 @@ public class ProductViewModel extends ViewModel {
         return productsLiveData;
     }
 
-    public LiveData<ArrayList<GetCategoriesModel>> getCategoriesLiveData() {
+    public LiveData<List<GetCategoriesModel>> getCategoriesLiveData() {
         return categoriesLiveData;
     }
 
-    public LiveData<ArrayList<GetUnitsDataModel>> getUnitsLiveData() {
+    public LiveData<List<GetUnitsDataModel>> getUnitsLiveData() {
         return unitsLiveData;
     }
 
@@ -83,8 +83,9 @@ public class ProductViewModel extends ViewModel {
                 if (isRefresh || currentList == null) {
                     productsLiveData.setValue(result.data);
                 } else {
-                    currentList.addAll(result.data);
-                    productsLiveData.setValue(currentList);
+                    List<GetProductDataModel> newList = new ArrayList<>(currentList);
+                    newList.addAll(result.data);
+                    productsLiveData.setValue(newList);
                 }
                 
                 if (result.data.size() < LIMIT) {
@@ -99,17 +100,17 @@ public class ProductViewModel extends ViewModel {
     }
 
     public void fetchCategories() {
-        categoryRepository.getCategories(result -> {
-            if (result.status == ApiResult.Status.SUCCESS) {
-                categoriesLiveData.setValue(result.data);
+        categoryRepository.getCategories(100, 0, result -> {
+            if (result.status == ApiResult.Status.SUCCESS && result.data != null) {
+                categoriesLiveData.setValue(result.data.getItems());
             }
         });
     }
 
     public void fetchUnits() {
-        unitsRepository.getUnits(result -> {
-            if (result.status == ApiResult.Status.SUCCESS) {
-                unitsLiveData.setValue(result.data);
+        unitsRepository.getUnits(100, 0, result -> {
+            if (result.status == ApiResult.Status.SUCCESS && result.data != null) {
+                unitsLiveData.setValue(result.data.getItems());
             }
         });
     }
