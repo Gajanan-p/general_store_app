@@ -232,14 +232,13 @@ public class ProductFragment extends Fragment implements ProductAdapter.OnProduc
             textTitle.setText(R.string.edit_product_title);
             editName.setText(existingProduct.getName());
             editSku.setText(existingProduct.getSku());
-            editBarcode.setText(existingProduct.getBarcode());
+            editBarcode.setText(existingProduct.getSku());
             editCost.setText(String.valueOf(existingProduct.getCostPrice()));
             editSell.setText(String.valueOf(existingProduct.getSellPrice()));
-            editMrp.setText(String.valueOf(existingProduct.getMrp()));
-            editGst.setText(String.valueOf(existingProduct.getGstPercent()));
-            editOpeningStock.setText(String.valueOf(existingProduct.getStockQty()));
-            editLowStock.setText(String.valueOf(existingProduct.getLowStockAlert()));
-            switchActive.setChecked(existingProduct.getIsActive() == 1);
+            if (editMrp != null) editMrp.setText(String.valueOf(existingProduct.getSellPrice())); // Example mapping
+            editOpeningStock.setText(existingProduct.getCurrentStock());
+            editLowStock.setText(existingProduct.getLowStockAlert());
+            switchActive.setChecked(Boolean.TRUE.equals(existingProduct.getIsActive()));
             
             // Set spinners if possible
             for (GetCategoriesModel cat : categoriesList) {
@@ -274,7 +273,7 @@ public class ProductFragment extends Fragment implements ProductAdapter.OnProduc
             AddProductRequest request = new AddProductRequest();
             request.setName(editName.getText().toString());
             request.setSku(editSku.getText().toString());
-            request.setBarcode(editBarcode.getText().toString());
+            request.setSku(editBarcode.getText().toString());
             
             int catIndex = categoryNames.indexOf(spinnerCategory.getText().toString());
             if (catIndex != -1) request.setCategoryId(categoriesList.get(catIndex).getId());
@@ -282,13 +281,12 @@ public class ProductFragment extends Fragment implements ProductAdapter.OnProduc
             int unitIndex = unitNames.indexOf(spinnerUnit.getText().toString());
             if (unitIndex != -1) request.setUnitId(unitsList.get(unitIndex).getId());
 
-            request.setCostPrice(parseInt(editCost.getText().toString()));
-            request.setSellPrice(parseInt(editSell.getText().toString()));
-            request.setMrp(parseInt(editMrp.getText().toString()));
-            request.setGstPercent(parseInt(editGst.getText().toString()));
-            request.setOpeningStock(parseInt(editOpeningStock.getText().toString()));
-            request.setLowStockAlert(parseInt(editLowStock.getText().toString()));
-            request.setIsActive(switchActive.isChecked() ? 1 : 0);
+            request.setPurchasePrice(parseDouble(editCost.getText().toString()));
+            request.setSellingPrice(parseDouble(editSell.getText().toString()));
+            request.setCurrentStock(parseDouble(editOpeningStock.getText().toString()));
+            request.setLowStockAlert(parseDouble(editLowStock.getText().toString()));
+            request.setIsActive(switchActive.isChecked());
+            request.setPriceChangeReason("Updated from App");
 
             if (existingProduct == null) {
                 viewModel.addProduct(request);
@@ -299,6 +297,14 @@ public class ProductFragment extends Fragment implements ProductAdapter.OnProduc
         });
 
         dialog.show();
+    }
+
+    private double parseDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
 
     private int parseInt(String value) {

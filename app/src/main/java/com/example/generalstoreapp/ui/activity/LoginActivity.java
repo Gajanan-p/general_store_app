@@ -70,6 +70,8 @@ public class LoginActivity extends AppCompatActivity {
         observeViewModel();
 
         buttonLogin.setOnClickListener(v -> {
+            editTextUserName.setText("ugajupande24@gmai.com");
+            editTextPassword.setText("12345678");
             String username = editTextUserName.getText().toString();
             String password = editTextPassword.getText().toString();
             if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {

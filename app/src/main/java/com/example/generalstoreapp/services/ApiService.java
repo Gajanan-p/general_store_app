@@ -2,6 +2,7 @@ package com.example.generalstoreapp.services;
 
 import com.example.generalstoreapp.models.AddCustomerRequest;
 import com.example.generalstoreapp.models.AddCustomerResponse;
+import com.example.generalstoreapp.models.AddPaymentRequest;
 import com.example.generalstoreapp.models.AddProductRequest;
 import com.example.generalstoreapp.models.AddProductResponse;
 import com.example.generalstoreapp.models.AddPurchasesRequest;
@@ -14,11 +15,13 @@ import com.example.generalstoreapp.models.BillingResponse;
 import com.example.generalstoreapp.models.CategoriesRequest;
 import com.example.generalstoreapp.models.CategoriesListResponse;
 import com.example.generalstoreapp.models.CustomerListResponse;
+import com.example.generalstoreapp.models.DashboardSummaryModel;
 import com.example.generalstoreapp.models.DeleteResponse;
 import com.example.generalstoreapp.models.DeleteUnitsResponse;
 import com.example.generalstoreapp.models.GetBillingDataModel;
 import com.example.generalstoreapp.models.GetCategoriesModel;
 import com.example.generalstoreapp.models.GetCustomerDataModel;
+import com.example.generalstoreapp.models.GetPaymentDataModel;
 import com.example.generalstoreapp.models.GetProductDataModel;
 import com.example.generalstoreapp.models.GetPurchasesDataModel;
 import com.example.generalstoreapp.models.GetRoleModel;
@@ -30,9 +33,14 @@ import com.example.generalstoreapp.models.GetUsersModel;
 import com.example.generalstoreapp.models.HealthResponse;
 import com.example.generalstoreapp.models.LoginModel;
 import com.example.generalstoreapp.models.LoginRequestModel;
+import com.example.generalstoreapp.models.LowStockDashboardModel;
+import com.example.generalstoreapp.models.PaymentsListResponse;
 import com.example.generalstoreapp.models.PermissionsModel;
 import com.example.generalstoreapp.models.PermissionsResponse;
+import com.example.generalstoreapp.models.PriceHistoryResponse;
+import com.example.generalstoreapp.models.ProductListResponse;
 import com.example.generalstoreapp.models.RbacMeModel;
+import com.example.generalstoreapp.models.RecentInvoiceModel;
 import com.example.generalstoreapp.models.RefreshRequest;
 import com.example.generalstoreapp.models.RefreshResponse;
 import com.example.generalstoreapp.models.RegistrationRequest;
@@ -40,7 +48,10 @@ import com.example.generalstoreapp.models.RegistrationResponse;
 import com.example.generalstoreapp.models.RoleRequest;
 import com.example.generalstoreapp.models.RoleResponse;
 import com.example.generalstoreapp.models.RolesListResponse;
+import com.example.generalstoreapp.models.SalesInvoiceListResponse;
 import com.example.generalstoreapp.models.Store;
+import com.example.generalstoreapp.models.SuppliersListResponse;
+import com.example.generalstoreapp.models.TopCustomerModel;
 import com.example.generalstoreapp.models.UnitsRequest;
 import com.example.generalstoreapp.models.UnitsListResponse;
 import com.example.generalstoreapp.models.Users;
@@ -210,12 +221,13 @@ public interface ApiService {
 //    Products
     @Headers("Content-Type: application/json")
     @GET("api/v1/products")
-    Call<ArrayList<GetProductDataModel>> getProductListDataFromServer(@Query("is_active") int isActive,
-                                                                      @Query("limit") int limit,
-                                                                      @Query("offset") int offset);
+    Call<ProductListResponse> getProductListDataFromServer(@Query("is_active") Boolean isActive,
+                                                                      @Query("low_stock") Boolean lowStock,
+                                                                      @Query("limit") Integer limit,
+                                                                      @Query("offset") Integer offset);
 
     @GET("api/v1/products/alerts/low-stock")
-    Call<ArrayList<GetProductDataModel>> getLowStockProducts();
+    Call<ProductListResponse> getLowStockProducts(@Query("limit") Integer limit, @Query("offset") Integer offset);
 
     @Headers("Content-Type: application/json")
     @GET("api/v1/products/by-barcode/{barcode}")
@@ -227,11 +239,11 @@ public interface ApiService {
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/products")
-    Call<AddProductResponse> saveProductDataFromServer(@Body AddProductRequest request);
+    Call<GetProductDataModel> saveProductDataFromServer(@Body AddProductRequest request);
 
     @Headers("Content-Type: application/json")
     @PUT("api/v1/products/{product_id}")
-    Call<AddProductResponse> updateProductDataFromServer(@Path("product_id") int product_id,
+    Call<GetProductDataModel> updateProductDataFromServer(@Path("product_id") int product_id,
                                                   @Body AddProductRequest request);
 
     @Headers("Content-Type: application/json")
@@ -239,16 +251,17 @@ public interface ApiService {
     Call<DeleteResponse> deleteProductDataFromServer(@Path("product_id") int product_id);
 
     @GET("api/v1/products/{product_id}/price-history")
-    Call<ResponseBody> getProductPriceHistory(@Path("product_id") int productId);
+    Call<PriceHistoryResponse> getProductPriceHistory(@Path("product_id") int productId, @Query("limit") Integer limit, @Query("offset") Integer offset);
 
     @PATCH("api/v1/products/{product_id}/stock")
-    Call<AddProductResponse> updateProductStock(@Path("product_id") int productId, @Body Object request);
+    Call<GetProductDataModel> updateProductStock(@Path("product_id") int productId, @Body AddProductRequest request);
 
 //    Suppliers
+
     @Headers("Content-Type: application/json")
     @GET("api/v1/suppliers")
-    Call<ArrayList<GetSuppliersDataModel>> getSupplierListDataFromServer(@Query("q") String q,
-                                                                         @Query("is_active") int isActive,
+    Call<SuppliersListResponse> getSupplierListDataFromServer(@Query("q") String q,
+                                                                         @Query("is_active") Boolean isActive,
                                                                          @Query("limit") int limit,
                                                                          @Query("offset") int offset);
 
@@ -258,11 +271,11 @@ public interface ApiService {
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/suppliers")
-    Call<AddSuppliersResponse> saveSuppliersDataFromServer(@Body AddSuppliersRequest request);
+    Call<GetSuppliersDataModel> saveSuppliersDataFromServer(@Body AddSuppliersRequest request);
 
     @Headers("Content-Type: application/json")
     @PUT("api/v1/suppliers/{supplier_id}")
-    Call<AddSuppliersResponse> updateSupplierDataFromServer(@Path("supplier_id") int supplier_id,
+    Call<GetSuppliersDataModel> updateSupplierDataFromServer(@Path("supplier_id") int supplier_id,
                                                   @Body AddSuppliersRequest request);
 
     @Headers("Content-Type: application/json")
@@ -313,17 +326,26 @@ public interface ApiService {
     Call<AddPurchasesResponse> savePurchasesDataFromServer(@Body AddPurchasesRequest request);
 
     @Headers("Content-Type: application/json")
+    @PUT("api/v1/purchase-invoices/{purchase_invoice_id}")
+    Call<AddPurchasesResponse> updatePurchasesDataFromServer(@Path("purchase_invoice_id") int purchase_invoice_id,
+                                                       @Body AddPurchasesRequest request);
+
+    @Headers("Content-Type: application/json")
+    @DELETE("api/v1/purchase-invoices/{purchase_invoice_id}")
+    Call<DeleteResponse> deletePurchasesDataFromServer(@Path("purchase_invoice_id") int purchase_invoice_id);
+
+    @Headers("Content-Type: application/json")
     @POST("api/v1/purchase-invoices/{purchase_invoice_id}/cancel")
     Call<DeleteResponse> cancelPurchaseInvoice(@Path("purchase_invoice_id") int purchaseId);
 
 //    Sales Invoices
-    @Headers("Content-Type: application/json")
     @GET("api/v1/sales-invoices")
-    Call<ArrayList<GetBillingDataModel>> getBillingListDataFromServer(@Query("customer_id") Integer customerId,
+    Call<SalesInvoiceListResponse> getBillingListDataFromServer(@Query("customer_id") Integer customerId,
                                                                       @Query("from_date") String fromDate,
                                                                       @Query("to_date") String toDate,
-                                                                      @Query("limit") int limit,
-                                                                      @Query("offset") int offset);
+                                                                      @Query("include_cancelled") Boolean includeCancelled,
+                                                                      @Query("limit") Integer limit,
+                                                                      @Query("offset") Integer offset);
 
     @Headers("Content-Type: application/json")
     @GET("api/v1/sales-invoices/{invoice_id}")
@@ -331,21 +353,21 @@ public interface ApiService {
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/sales-invoices/{invoice_id}/cancel")
-    Call<BillingResponse> cancelBillingDataFromServer(@Path("invoice_id") int billingId);
+    Call<GetBillingDataModel> cancelBillingDataFromServer(@Path("invoice_id") int billingId);
 
     @Headers("Content-Type: application/json")
     @POST("api/v1/sales-invoices")
-    Call<BillingResponse> createInvoiceDataFromServer(@Body BillingRequest request);
+    Call<GetBillingDataModel> createInvoiceDataFromServer(@Body BillingRequest request);
 
 //    Payments
     @POST("api/v1/payments")
-    Call<ResponseBody> createPayment(@Body Object request);
+    Call<GetPaymentDataModel> createPayment(@Body AddPaymentRequest request);
 
     @GET("api/v1/payments")
-    Call<ResponseBody> listPayments();
+    Call<PaymentsListResponse> listPayments(@Query("limit") Integer limit, @Query("offset") Integer offset);
 
     @GET("api/v1/payments/{payment_id}")
-    Call<ResponseBody> getPayment(@Path("payment_id") int paymentId);
+    Call<GetPaymentDataModel> getPayment(@Path("payment_id") int paymentId);
 
     @DELETE("api/v1/payments/{payment_id}")
     Call<DeleteResponse> cancelPayment(@Path("payment_id") int paymentId);
@@ -413,16 +435,16 @@ public interface ApiService {
 
 //    Dashboard
     @GET("api/v1/dashboard/summary")
-    Call<ResponseBody> getDashboardSummary();
+    Call<DashboardSummaryModel> getDashboardSummary();
 
     @GET("api/v1/dashboard/recent-invoices")
-    Call<ResponseBody> getRecentInvoices();
+    Call<ArrayList<RecentInvoiceModel>> getRecentInvoices(@Query("limit") Integer limit);
 
     @GET("api/v1/dashboard/low-stock")
-    Call<ResponseBody> getDashboardLowStock();
+    Call<ArrayList<LowStockDashboardModel>> getDashboardLowStock(@Query("limit") Integer limit);
 
     @GET("api/v1/dashboard/top-customers")
-    Call<ResponseBody> getTopCustomers();
+    Call<ArrayList<TopCustomerModel>> getTopCustomers(@Query("limit") Integer limit);
 
 //    Reports
     @GET("api/v1/reports/sales")

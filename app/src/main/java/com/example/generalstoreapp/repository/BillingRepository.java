@@ -2,16 +2,13 @@ package com.example.generalstoreapp.repository;
 
 import android.content.Context;
 
-
 import com.example.generalstoreapp.models.BillingRequest;
-import com.example.generalstoreapp.models.BillingResponse;
 import com.example.generalstoreapp.models.GetBillingDataModel;
+import com.example.generalstoreapp.models.SalesInvoiceListResponse;
 import com.example.generalstoreapp.services.ApiService;
 import com.example.generalstoreapp.services.RetrofitClient;
 import com.example.generalstoreapp.services.handlingservices.ApiCallback;
 import com.example.generalstoreapp.services.handlingservices.ApiExecutor;
-
-import java.util.ArrayList;
 
 public class BillingRepository {
 
@@ -21,11 +18,10 @@ public class BillingRepository {
         api = RetrofitClient.getApiService(context);
     }
 
-    public void getBillingList(Integer customerId, String fromDate, String toDate, int limit, int offset,
-                               ApiCallback<ArrayList<GetBillingDataModel>> callback) {
+    public void getBillingList(Integer customerId, String fromDate, String toDate, Boolean includeCancelled, int limit, int offset,
+                               ApiCallback<SalesInvoiceListResponse> callback) {
         ApiExecutor.execute(
-                api.getBillingListDataFromServer(
-                        customerId, fromDate, toDate, limit, offset),
+                api.getBillingListDataFromServer(customerId, fromDate, toDate, includeCancelled, limit, offset),
                 callback
         );
     }
@@ -34,12 +30,12 @@ public class BillingRepository {
         ApiExecutor.execute(api.getBillingByIdDataFromServer(billingId), callback);
     }
 
-    public void cancelBilling(int billingId, ApiCallback<BillingResponse> callback) {
+    public void cancelBilling(int billingId, ApiCallback<GetBillingDataModel> callback) {
         ApiExecutor.execute(api.cancelBillingDataFromServer(billingId), callback);
     }
 
     public void createInvoice(BillingRequest request,
-                              ApiCallback<BillingResponse> callback) {
+                              ApiCallback<GetBillingDataModel> callback) {
         ApiExecutor.execute(api.createInvoiceDataFromServer(request), callback);
     }
 }

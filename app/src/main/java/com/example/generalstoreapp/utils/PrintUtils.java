@@ -152,15 +152,15 @@ public class PrintUtils {
         for (int i = 0; i < list.size(); i++) {
             GetBillingDataModel billing = list.get(i);
             String customerName = (billing.getCustomer() != null) ? billing.getCustomer().getName() : "Unknown";
-            int amount = (billing.getTotalAmount() != null) ? billing.getTotalAmount() : 0;
+            double amount = (billing.getTotalAmount() != null) ? billing.getTotalAmount() : 0.0;
             
-            double due = (billing.getDueAmount() != null) ? (double) billing.getDueAmount() : 0.0;
+            double due = (billing.getDueAmount() != null) ? billing.getDueAmount() : 0.0;
             String status = (due <= 0) ? "Paid" : "Pending";
 
             html.append("<tr>");
             html.append("<td>").append(i + 1).append("</td>");
             html.append("<td>").append(customerName).append("</td>");
-            html.append("<td>₹").append(amount).append("</td>");
+            html.append("<td>₹").append(String.format(Locale.getDefault(), "%.2f", amount)).append("</td>");
             html.append("<td>").append(status).append("</td>");
             html.append("</tr>");
 

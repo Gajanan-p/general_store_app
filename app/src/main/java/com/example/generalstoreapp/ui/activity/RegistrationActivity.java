@@ -94,10 +94,9 @@ public class RegistrationActivity extends AppCompatActivity {
         buttonRegistration.setEnabled(false);
         
         RegistrationRequest request = new RegistrationRequest();
-        request.setFirstName(editTextFirstName.getText().toString());
-        request.setLastName(editTextLastName.getText().toString());
+        request.setOwnerName(editTextFirstName.getText().toString() + " " + editTextLastName.getText().toString());
         request.setEmail(editTextEmail.getText().toString());
-        request.setMobile(editTextMobile.getText().toString());
+        request.setPhone(editTextMobile.getText().toString());
         request.setPassword(editTextPassword.getText().toString());
 
         authRepository.register(request, result -> {

@@ -12,6 +12,9 @@ public class RoleRequest {
     @SerializedName("description")
     @Expose
     private String description;
+    @SerializedName("permission_ids")
+    @Expose
+    private java.util.List<Integer> permissionIds;
 
     /**
      * No args constructor for use in serialization
@@ -40,6 +43,14 @@ public class RoleRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public java.util.List<Integer> getPermissionIds() {
+        return permissionIds;
+    }
+
+    public void setPermissionIds(java.util.List<Integer> permissionIds) {
+        this.permissionIds = permissionIds;
     }
 
 }

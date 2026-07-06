@@ -10,6 +10,7 @@ import com.example.generalstoreapp.models.AddCustomerResponse;
 import com.example.generalstoreapp.models.BillingItemsRequest;
 import com.example.generalstoreapp.models.BillingRequest;
 import com.example.generalstoreapp.models.CartItem;
+import com.example.generalstoreapp.models.GetBillingDataModel;
 import com.example.generalstoreapp.models.GetCustomerDataModel;
 import com.example.generalstoreapp.models.GetProductDataModel;
 import com.example.generalstoreapp.repository.BillingRepository;
@@ -96,8 +97,10 @@ public class BillingViewModel extends ViewModel {
                 newCustomer.setCity(response.getCity());
                 newCustomer.setState(response.getState());
                 newCustomer.setPincode(response.getPincode());
-                newCustomer.setOpeningBalance(response.getOpeningBalance());
-                newCustomer.setIsActive(response.getIsActive());
+                try {
+                    newCustomer.setOpeningBalance(response.getOpeningBalance());
+                    newCustomer.setIsActive(response.getIsActive());
+                } catch (Exception ignored) {}
                 
                 selectCustomer(newCustomer);
             } else {
@@ -111,7 +114,7 @@ public class BillingViewModel extends ViewModel {
     }
 
     public void addProductToCart(GetProductDataModel product) {
-        addProductToCart(product, 1, product.getSellPrice().doubleValue());
+        addProductToCart(product, 1, product.getSellPrice());
     }
 
     public void addProductToCart(GetProductDataModel product, int quantity, double overrideRate) {
@@ -122,7 +125,6 @@ public class BillingViewModel extends ViewModel {
         for (CartItem item : currentItems) {
             if (item.getProduct().getId().equals(product.getId())) {
                 item.setQuantity(item.getQuantity() + quantity);
-                // If rate is different, we might want to handle it, but for now we'll update it
                 item.setOverridePrice(overrideRate);
                 found = true;
                 break;
@@ -215,21 +217,22 @@ public class BillingViewModel extends ViewModel {
         
         BillingRequest request = new BillingRequest();
         request.setCustomerId(selectedCustomer.getValue().getId());
-        request.setInvoiceDate(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()));
-        request.setPaidAmount((int) paidAmount);
-        request.setDiscountAmount(totalDiscount.getValue().intValue());
+        request.setInvoiceDate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(new Date()));
+        request.setPaidAmount(paidAmount);
+        request.setDiscountAmount(totalDiscount.getValue());
+        request.setPaymentMode("cash");
         
         List<BillingItemsRequest> itemRequests = new ArrayList<>();
         for (CartItem item : cartItems.getValue()) {
             itemRequests.add(new BillingItemsRequest(
                 item.getProduct().getId(),
-                item.getQuantity(),
-                item.getProduct().getSellPrice(),
-                item.getProduct().getGstPercent()
+                (double) item.getQuantity(),
+                item.getPrice(),
+                0.0, // discount per item not implemented in UI yet
+                item.getGstAmount()
             ));
         }
         request.setItems(itemRequests);
-        request.setPaymentMethod("Cash");
 
         billingRepository.createInvoice(request, result -> {
             loading.setValue(false);

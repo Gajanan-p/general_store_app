@@ -109,7 +109,7 @@ public class BillingDetailFragment extends Fragment {
                 textInvoiceNo.setText(detail.getInvoiceNo());
                 textDate.setText("Date: " + detail.getInvoiceDate());
                 textCustomer.setText("Customer ID: " + detail.getCustomerId());
-                textStatus.setText(detail.getStatus());
+                textStatus.setText(detail.getPaymentStatus());
                 
                 textSubtotal.setText(formatCurrency(detail.getSubtotal()));
                 textDiscount.setText(formatCurrency(detail.getDiscountAmount()));
@@ -121,7 +121,7 @@ public class BillingDetailFragment extends Fragment {
                 adapter.setItems(detail.getItems());
 
                 // Show cancel button only if status is POSTED or something active
-                if ("POSTED".equals(detail.getStatus()) || "ACTIVE".equals(detail.getStatus())) {
+                if ("POSTED".equals(detail.getPaymentStatus()) || "ACTIVE".equals(detail.getPaymentStatus())) {
                     btnCancelInvoice.setVisibility(View.VISIBLE);
                 } else {
                     btnCancelInvoice.setVisibility(View.GONE);
@@ -147,8 +147,8 @@ public class BillingDetailFragment extends Fragment {
         });
     }
 
-    private String formatCurrency(Integer value) {
-        return String.format(Locale.getDefault(), "₹%d.00", value != null ? value : 0);
+    private String formatCurrency(Double value) {
+        return String.format(Locale.getDefault(), "₹%.2f", value != null ? value : 0.0);
     }
 
     private class DetailItemAdapter extends RecyclerView.Adapter<DetailItemAdapter.ViewHolder> {
@@ -170,7 +170,7 @@ public class BillingDetailFragment extends Fragment {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             BillingItem item = items.get(position);
             holder.textName.setText("Product ID: " + item.getProductId());
-            holder.textDetails.setText(String.format(Locale.getDefault(), "Price: ₹%d x %d", item.getSellPrice(), item.getQty()));
+            holder.textDetails.setText(String.format(Locale.getDefault(), "Price: ₹%.2f x %.2f", item.getSellPrice(), item.getQty()));
             holder.textTotal.setText(formatCurrency(item.getLineTotal()));
         }
 

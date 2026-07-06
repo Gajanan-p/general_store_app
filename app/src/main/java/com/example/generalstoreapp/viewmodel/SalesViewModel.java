@@ -50,10 +50,11 @@ public class SalesViewModel extends ViewModel {
 
     public void fetchBillingList(Integer customerId, String fromDate, String toDate) {
         loadingLiveData.setValue(true);
-        billingRepository.getBillingList(customerId, fromDate, toDate, 100, 0, result -> {
+        Integer finalCustomerId = (customerId != null) ? customerId : 0;
+        billingRepository.getBillingList(finalCustomerId, fromDate, toDate, false, 100, 0, result -> {
             loadingLiveData.setValue(false);
-            if (result.status == ApiResult.Status.SUCCESS) {
-                billingListLiveData.setValue(result.data);
+            if (result.status == ApiResult.Status.SUCCESS && result.data != null) {
+                billingListLiveData.setValue(result.data.getItems());
             } else {
                 errorLiveData.setValue(result.message);
             }

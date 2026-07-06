@@ -130,9 +130,9 @@ public class SalesFragment extends Fragment implements BillingAdapter.OnBillingA
     }
 
     private void updateFilter() {
-        String from = apiFormat.format(fromCalendar.getTime()) + "T00:00:00Z";
-        String to = apiFormat.format(toCalendar.getTime()) + "T23:59:59Z";
-        viewModel.fetchBillingList(selectedCustomerId, from, to);
+        String from = apiFormat.format(fromCalendar.getTime());
+        String to = apiFormat.format(toCalendar.getTime());
+        viewModel.fetchBillingList(selectedCustomerId != null ? selectedCustomerId : 0, from, to);
     }
 
     @Override

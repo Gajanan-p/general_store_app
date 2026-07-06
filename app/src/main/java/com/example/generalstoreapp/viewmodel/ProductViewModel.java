@@ -9,6 +9,7 @@ import com.example.generalstoreapp.models.AddProductRequest;
 import com.example.generalstoreapp.models.GetCategoriesModel;
 import com.example.generalstoreapp.models.GetProductDataModel;
 import com.example.generalstoreapp.models.GetUnitsDataModel;
+import com.example.generalstoreapp.models.ProductPriceHistoryModel;
 import com.example.generalstoreapp.repository.CategoryRepository;
 import com.example.generalstoreapp.repository.ProductRepository;
 import com.example.generalstoreapp.repository.UnitsRepository;
@@ -26,6 +27,7 @@ public class ProductViewModel extends ViewModel {
     private final MutableLiveData<List<GetProductDataModel>> productsLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<GetCategoriesModel>> categoriesLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<GetUnitsDataModel>> unitsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<ProductPriceHistoryModel>> priceHistoryLiveData = new MutableLiveData<>();
     
     private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loadingLiveData = new MutableLiveData<>();
@@ -55,6 +57,10 @@ public class ProductViewModel extends ViewModel {
         return unitsLiveData;
     }
 
+    public LiveData<List<ProductPriceHistoryModel>> getPriceHistoryLiveData() {
+        return priceHistoryLiveData;
+    }
+
     public LiveData<String> getErrorLiveData() {
         return errorLiveData;
     }
@@ -76,19 +82,23 @@ public class ProductViewModel extends ViewModel {
         }
 
         loadingLiveData.setValue(true);
-        productRepository.getProducts(isActive, LIMIT, currentOffset, result -> {
+        // Mapping isActive int to Boolean (1 = true)
+        Boolean isActiveBool = (isActive == 1);
+        
+        productRepository.getProducts(isActiveBool, false, LIMIT, currentOffset, result -> {
             loadingLiveData.setValue(false);
-            if (result.status == ApiResult.Status.SUCCESS) {
+            if (result.status == ApiResult.Status.SUCCESS && result.data != null) {
+                List<GetProductDataModel> items = result.data.getItems();
                 List<GetProductDataModel> currentList = productsLiveData.getValue();
                 if (isRefresh || currentList == null) {
-                    productsLiveData.setValue(result.data);
+                    productsLiveData.setValue(items);
                 } else {
                     List<GetProductDataModel> newList = new ArrayList<>(currentList);
-                    newList.addAll(result.data);
+                    newList.addAll(items);
                     productsLiveData.setValue(newList);
                 }
                 
-                if (result.data.size() < LIMIT) {
+                if (items.size() < LIMIT) {
                     isLastPage = true;
                 } else {
                     currentOffset += LIMIT;
@@ -145,6 +155,18 @@ public class ProductViewModel extends ViewModel {
             loadingLiveData.setValue(false);
             if (result.status == ApiResult.Status.SUCCESS) {
                 successLiveData.setValue(true);
+            } else {
+                errorLiveData.setValue(result.message);
+            }
+        });
+    }
+
+    public void fetchPriceHistory(int productId) {
+        loadingLiveData.setValue(true);
+        productRepository.getPriceHistory(productId, 50, 0, result -> {
+            loadingLiveData.setValue(false);
+            if (result.status == ApiResult.Status.SUCCESS && result.data != null) {
+                priceHistoryLiveData.setValue(result.data.getItems());
             } else {
                 errorLiveData.setValue(result.message);
             }

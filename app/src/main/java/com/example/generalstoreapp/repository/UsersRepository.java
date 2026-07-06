@@ -3,17 +3,13 @@ package com.example.generalstoreapp.repository;
 import android.content.Context;
 
 import com.example.generalstoreapp.models.AddUsersByRoleRequest;
-import com.example.generalstoreapp.models.AddUsersByRoleResponse;
 import com.example.generalstoreapp.models.DeleteResponse;
-import com.example.generalstoreapp.models.GetUsersByPermissionsModel;
-import com.example.generalstoreapp.models.GetUsersByRoleModel;
-import com.example.generalstoreapp.models.GetUsersModel;
+import com.example.generalstoreapp.models.Users;
+import com.example.generalstoreapp.models.UsersListResponse;
 import com.example.generalstoreapp.services.ApiService;
 import com.example.generalstoreapp.services.RetrofitClient;
 import com.example.generalstoreapp.services.handlingservices.ApiCallback;
 import com.example.generalstoreapp.services.handlingservices.ApiExecutor;
-
-import java.util.ArrayList;
 
 public class UsersRepository {
 
@@ -23,33 +19,19 @@ public class UsersRepository {
         api = RetrofitClient.getApiService(context);
     }
 
-    public void getUsers(ApiCallback<ArrayList<GetUsersModel>> callback) {
-        ApiExecutor.execute(api.getUsersDataFromServer(), callback);
+    public void listUsers(int limit, int offset, ApiCallback<UsersListResponse> callback) {
+        ApiExecutor.execute(api.listUsers(limit, offset), callback);
     }
 
-    public void getUserRoles(int userId,
-                             ApiCallback<GetUsersByRoleModel> callback) {
-        ApiExecutor.execute(api.getUsersByRoleDataFromServer(userId), callback);
+    public void createUser(AddUsersByRoleRequest request, ApiCallback<Users> callback) {
+        ApiExecutor.execute(api.createStaffUser(request), callback);
     }
 
-    public void getUserPermissions(int userId,
-                                   ApiCallback<GetUsersByPermissionsModel> callback) {
-        ApiExecutor.execute(api.getUsersByPermissionDataFromServer(userId), callback);
+    public void updateUser(int userId, AddUsersByRoleRequest request, ApiCallback<Users> callback) {
+        ApiExecutor.execute(api.updateStaffUser(userId, request), callback);
     }
 
-    public void addUsersByRole(int userId, AddUsersByRoleRequest request,
-                               ApiCallback<AddUsersByRoleResponse> callback) {
-        ApiExecutor.execute(api.addUsersByRoleDataFromServer(userId, request), callback);
+    public void deleteUser(int userId, ApiCallback<DeleteResponse> callback) {
+        ApiExecutor.execute(api.deleteStaffUser(userId), callback);
     }
-    public void updateUsersByRole(int userId, AddUsersByRoleRequest request,
-                                   ApiCallback<AddUsersByRoleResponse> callback) {
-        ApiExecutor.execute(api.updateUsersDataFromServer(userId, request), callback);
-
-    }
-
-    public void deleteUsers(int userId,
-                             ApiCallback<DeleteResponse> callback) {
-        ApiExecutor.execute(api.deleteUsersDataFromServer(userId), callback);
-    }
-
 }

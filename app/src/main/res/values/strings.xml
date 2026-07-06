@@ -275,4 +275,19 @@
     <string name="without_tax">Without Tax</string>
     <string name="tax">Tax</string>
     <string name="rate_price_unit">Rate (Price/Unit)</string>
+    <string name="add_supplier_title">Add Supplier</string>
+    <string name="edit_supplier_title">Edit Supplier</string>
+    <string name="delete_supplier_title">Delete Supplier</string>
+    <string name="supplier_name">Supplier Name</string>
+    <string name="supplier_phone">Supplier Phone</string>
+    <string name="supplier_email">Supplier Email</string>
+    <string name="address_line_1">Address Line 1</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="pincode">Pincode</string>
+    <string name="opening_balance">Opening Balance</string>
+    <string name="search_hint">Search&#8230;</string>
+    <string name="no_data_found">No data found</string>
+    <string name="add_supplier">Add Supplier</string>
+    <string name="add_role">Add Role</string>
 </resources>

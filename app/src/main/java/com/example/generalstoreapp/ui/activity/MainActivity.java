@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private LoginModel loginModel;
     private AuthRepository authRepository;
     private HomeViewModel homeViewModel;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,35 +82,40 @@ public class MainActivity extends AppCompatActivity {
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_content_main);
-        NavController navController = navHostFragment.getNavController();
+        
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
 
-        DrawerLayout drawer = binding.drawerLayout;
+            DrawerLayout drawer = binding.drawerLayout;
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home,
-                R.id.salesFragment,
-                R.id.productFragment,
-                R.id.settingsFragment
-        )
-                .setOpenableLayout(drawer)
-                .build();
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_home,
+                    R.id.salesFragment,
+                    R.id.productFragment,
+                    R.id.settingsFragment
+            )
+                    .setOpenableLayout(drawer)
+                    .build();
 
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+            NavigationUI.setupWithNavController(navView, navController);
+            NavigationUI.setupWithNavController(binding.navView, navController);
 
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            invalidateOptionsMenu();
-        });
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                invalidateOptionsMenu();
+            });
+        }
 
         binding.navView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_logout) {
                 logout();
             } else {
-                boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
-                if (handled) {
-                    binding.drawerLayout.closeDrawers();
+                if (navController != null) {
+                    boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
+                    if (handled) {
+                        binding.drawerLayout.closeDrawers();
+                    }
                 }
             }
             return true;
@@ -144,7 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        if (navController == null) return super.onPrepareOptionsMenu(menu);
+
         boolean isHome = navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() == R.id.nav_home;
         
         boolean canReadBilling = PermissionUtils.hasPermission(this, "BILLING_READ");
@@ -194,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        if (navController == null) return super.onSupportNavigateUp();
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
@@ -217,15 +224,17 @@ public class MainActivity extends AppCompatActivity {
         if (usersModel == null || usersModel.getUser() == null) return;
 
         View headerView = binding.navView.getHeaderView(0);
+        if (headerView == null) return;
+
         TextView textName = headerView.findViewById(R.id.userName);
         TextView textMobile = headerView.findViewById(R.id.userMobile);
         TextView textRole = headerView.findViewById(R.id.userRole);
         TextView textPermissions = headerView.findViewById(R.id.viewPermissions);
 
         Users user = usersModel.getUser();
-        String fullName = user.getFirstName() + " " + (user.getMiddleName() != null ? user.getMiddleName() + " " : "") + user.getLastName();
+        String fullName = user.getName();
         textName.setText(fullName);
-        textMobile.setText("Mobile: " + user.getMobile());
+        textMobile.setText("Mobile: " + user.getPhone());
 
         if (usersModel.getRoles() != null && !usersModel.getRoles().isEmpty()) {
             StringBuilder roles = new StringBuilder("Role: ");
@@ -258,26 +267,72 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void handledPermissionWiseViews(UsersModel usersModel){
-        if (usersModel == null || usersModel.getPermissions() == null) return;
+        if (usersModel == null) return;
 
         List<String> permissions = usersModel.getPermissions();
+        if (permissions == null) permissions = new java.util.ArrayList<>();
+
+        boolean isSuperUser = false;
+        if (usersModel.getRoles() != null) {
+            for (com.example.generalstoreapp.models.UserRole role : usersModel.getRoles()) {
+                String name = role.getName();
+                if (name != null && (name.toLowerCase().contains("owner") || name.toLowerCase().contains("admin"))) {
+                    isSuperUser = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!isSuperUser && usersModel.getUser() != null && usersModel.getUser().getRoleName() != null) {
+            String roleName = usersModel.getUser().getRoleName();
+            if (roleName.toLowerCase().contains("owner") || roleName.toLowerCase().contains("admin")) {
+                isSuperUser = true;
+            }
+        }
+
         Menu navMenu = binding.navView.getMenu();
-        Menu bottomMenu = ((BottomNavigationView) findViewById(R.id.bottom_navigation)).getMenu();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        Menu bottomMenu = bottomNavigationView != null ? bottomNavigationView.getMenu() : null;
 
-        checkAndSetVisible(navMenu, R.id.categoriesFragment, permissions.contains("CATEGORY_READ"));
-        checkAndSetVisible(navMenu, R.id.unitsFragment, permissions.contains("UNIT_READ"));
-        checkAndSetVisible(navMenu, R.id.productFragment, permissions.contains("PRODUCT_READ"));
-        checkAndSetVisible(navMenu, R.id.roleFragment, permissions.contains("ROLE_READ"));
-        checkAndSetVisible(navMenu, R.id.usersFragment, permissions.contains("USER_READ"));
-        checkAndSetVisible(navMenu, R.id.customersFragment, permissions.contains("CUSTOMER_READ"));
-        checkAndSetVisible(navMenu, R.id.supplierFragment, permissions.contains("SUPPLIER_READ"));
-        checkAndSetVisible(navMenu, R.id.purchaseFragment, permissions.contains("PURCHASE_READ"));
-        checkAndSetVisible(navMenu, R.id.billingFragment, permissions.contains("BILLING_READ"));
-        checkAndSetVisible(navMenu, R.id.salesFragment, permissions.contains("REPORT_READ"));
-        checkAndSetVisible(navMenu, R.id.settingsFragment, permissions.contains("RBAC_READ") || permissions.contains("ROLE_READ"));
+        boolean canReadHome = isSuperUser || hasPermission(permissions, "dashboard:read");
+        boolean canReadCategory = isSuperUser || hasPermission(permissions, "product_masters:read") || hasPermission(permissions, "categories:read");
+        boolean canReadUnit = isSuperUser || hasPermission(permissions, "product_masters:read") || hasPermission(permissions, "units:read");
+        boolean canReadProduct = isSuperUser || hasPermission(permissions, "products:read");
+        boolean canReadRole = isSuperUser || hasPermission(permissions, "rbac:read");
+        boolean canReadUser = isSuperUser || hasPermission(permissions, "users:read");
+        boolean canReadCustomer = isSuperUser || hasPermission(permissions, "customers:read");
+        boolean canReadSupplier = isSuperUser || hasPermission(permissions, "suppliers:read");
+        boolean canReadPurchase = isSuperUser || hasPermission(permissions, "purchase_invoices:read");
+        boolean canReadBilling = isSuperUser || hasPermission(permissions, "sales_invoices:read");
+        boolean canReadReport = isSuperUser || hasPermission(permissions, "reports:read");
+        boolean canReadSettings = isSuperUser || hasPermission(permissions, "rbac:read") || hasPermission(permissions, "store:read");
 
-        checkAndSetVisible(bottomMenu, R.id.productFragment, permissions.contains("PRODUCT_READ"));
-        checkAndSetVisible(bottomMenu, R.id.settingsFragment, permissions.contains("RBAC_READ") || permissions.contains("ROLE_READ"));
+        checkAndSetVisible(navMenu, R.id.nav_home, canReadHome);
+        checkAndSetVisible(navMenu, R.id.categoriesFragment, canReadCategory);
+        checkAndSetVisible(navMenu, R.id.unitsFragment, canReadUnit);
+        checkAndSetVisible(navMenu, R.id.productFragment, canReadProduct);
+        checkAndSetVisible(navMenu, R.id.roleFragment, canReadRole);
+        checkAndSetVisible(navMenu, R.id.usersFragment, canReadUser);
+        checkAndSetVisible(navMenu, R.id.customersFragment, canReadCustomer);
+        checkAndSetVisible(navMenu, R.id.supplierFragment, canReadSupplier);
+        checkAndSetVisible(navMenu, R.id.purchaseFragment, canReadPurchase);
+        checkAndSetVisible(navMenu, R.id.billingFragment, canReadBilling);
+        checkAndSetVisible(navMenu, R.id.salesFragment, canReadReport);
+        checkAndSetVisible(navMenu, R.id.settingsFragment, canReadSettings);
+
+        if (bottomMenu != null) {
+            checkAndSetVisible(bottomMenu, R.id.nav_home, canReadHome);
+            checkAndSetVisible(bottomMenu, R.id.productFragment, canReadProduct);
+            checkAndSetVisible(bottomMenu, R.id.settingsFragment, canReadSettings);
+        }
+    }
+
+    private boolean hasPermission(List<String> permissions, String target) {
+        if (permissions == null) return false;
+        for (String p : permissions) {
+            if (p != null && (p.equalsIgnoreCase(target) || p.toUpperCase().contains(target.toUpperCase()))) return true;
+        }
+        return false;
     }
 
     private void checkAndSetVisible(Menu menu, int id, boolean visible) {

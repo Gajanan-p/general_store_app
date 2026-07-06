@@ -14,4 +14,5 @@
     <string name="without_tax">Without Tax</string>
     <string name="tax">Tax</string>
     <string name="rate_price_unit">Rate (Price/Unit)</string>
+    <string name="add_supplier">Add Supplier</string>
 </resources>

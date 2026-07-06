@@ -44,8 +44,8 @@ public class BillingAdapter extends RecyclerView.Adapter<BillingAdapter.ViewHold
         GetBillingDataModel billing = billingList.get(position);
         holder.textInvoiceNo.setText(billing.getInvoiceNo());
         holder.textDate.setText(billing.getInvoiceDate());
-        holder.textCustomerName.setText(String.format(Locale.getDefault(), "Customer Name: %s", (billing.getCustomer() != null) ? billing.getCustomer().getName() : "N/A"));
-        holder.textTotal.setText(String.format(Locale.getDefault(), "Total: ₹%d", billing.getTotalAmount() != null ? billing.getTotalAmount() : 0));
+        holder.textCustomerName.setText(String.format(Locale.getDefault(),(billing.getCustomer() != null) ? billing.getCustomer().getName() : "N/A"));
+        holder.textTotal.setText(String.format(Locale.getDefault(), "Total: ₹%.2f", billing.getTotalAmount() != null ? billing.getTotalAmount() : 0.0));
         
         double balance = billing.getDueAmount() != null ? (double) billing.getDueAmount() : 0.0;
         if (balance <= 0) {

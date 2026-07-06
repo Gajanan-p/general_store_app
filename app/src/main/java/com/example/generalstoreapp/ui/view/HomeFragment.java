@@ -26,6 +26,7 @@ import com.example.generalstoreapp.ui.adapters.BillingAdapter;
 import com.example.generalstoreapp.viewmodel.HomeViewModel;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -50,9 +51,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         recyclerViewSalesList.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerViewSalesList.setHasFixedSize(true);
 
-        buttonAddNewBilling.setVisibility(PermissionUtils.hasPermission(requireContext(), "BILLING_CREATE") ? View.VISIBLE : View.GONE);
+        // More robust permission check for Owner
+        boolean canCreate = PermissionUtils.hasPermission(requireContext(), "sales_invoices:create");
+        buttonAddNewBilling.setVisibility(canCreate ? View.VISIBLE : View.GONE);
+
         buttonAddNewBilling.setOnClickListener(this);
         getBillingData();
+        homeViewModel.fetchDashboardData();
         observeViewModel();
 
         return binding.getRoot();
@@ -80,11 +85,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public void getBillingData(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String datePart = sdf.format(new Date());
-        String fromDate = datePart + "T00:00:00Z";
-        String toDate = datePart + "T23:59:59Z";
+        Calendar cal = Calendar.getInstance();
+        String toDate = sdf.format(cal.getTime());
+        cal.add(Calendar.DAY_OF_YEAR, -7); // Show last 7 days on dashboard
+        String fromDate = sdf.format(cal.getTime());
 
-        homeViewModel.fetchBillingList( 3,
+        homeViewModel.fetchBillingList( null,
                 fromDate,
                 toDate,
                 50,
@@ -92,13 +98,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
     private void observeViewModel() {
         homeViewModel.getBillingListLiveData().observe(getViewLifecycleOwner(), list -> {
-            adapter = new BillingAdapter(billing -> {
-                Bundle bundle = new Bundle();
-                bundle.putInt("billing_id", billing.getId());
-                Navigation.findNavController(requireView()).navigate(R.id.billingDetailFragment, bundle);
-            });
-            recyclerViewSalesList.setAdapter(adapter);
-            adapter.setData(list);
+            if (list != null && !list.isEmpty()) {
+                if (adapter == null) {
+                    adapter = new BillingAdapter(billing -> {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("billing_id", billing.getId());
+                        Navigation.findNavController(requireView()).navigate(R.id.billingDetailFragment, bundle);
+                    });
+                    recyclerViewSalesList.setAdapter(adapter);
+                }
+                adapter.setData(list);
+                recyclerViewSalesList.setVisibility(View.VISIBLE);
+                binding.textEmptyHome.setVisibility(View.GONE);
+            } else {
+                binding.textEmptyHome.setVisibility(View.VISIBLE);
+            }
         });
 
         homeViewModel.getTodaySaleAmount().observe(getViewLifecycleOwner(), amount -> 
@@ -109,6 +123,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         
         homeViewModel.getTodayPendingAmount().observe(getViewLifecycleOwner(), amount -> 
                 binding.txtPendingDueAmount.setText(String.format(Locale.getDefault(), "₹ %.2f", amount)));
+
+        homeViewModel.getDashboardSummary().observe(getViewLifecycleOwner(), summary -> {
+            if (summary != null) {
+                binding.txtTodaySaleAmount.setText(summary.getTodaySales());
+                binding.txtAmount.setText(summary.getTodayPayments());
+                binding.txtPendingDueAmount.setText(summary.getTotalOutstanding());
+                
+                // Re-check permission when data arrives to ensure button shows for Owner
+                boolean canCreate = PermissionUtils.hasPermission(requireContext(), "sales_invoices:create");
+                buttonAddNewBilling.setVisibility(canCreate ? View.VISIBLE : View.GONE);
+            }
+        });
 
         homeViewModel.getLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
             //progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);

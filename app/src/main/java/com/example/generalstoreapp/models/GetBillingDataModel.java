@@ -5,187 +5,115 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class GetBillingDataModel {
-
     @SerializedName("id")
     @Expose
     private Integer id;
-    @SerializedName("invoice_no")
+    @SerializedName("store_id")
     @Expose
-    private String invoiceNo;
+    private Integer storeId;
     @SerializedName("customer_id")
     @Expose
     private Integer customerId;
-    @SerializedName("customer")
+    @SerializedName("invoice_no")
     @Expose
-    private GetCustomerDataModel customer;
+    private String invoiceNo;
     @SerializedName("invoice_date")
     @Expose
     private String invoiceDate;
-    @SerializedName("status")
-    @Expose
-    private String status;
     @SerializedName("subtotal")
     @Expose
-    private Integer subtotal;
+    private Double subtotal;
     @SerializedName("discount_amount")
     @Expose
-    private Integer discountAmount;
+    private Double discountAmount;
     @SerializedName("tax_amount")
     @Expose
-    private Integer taxAmount;
+    private Double taxAmount;
     @SerializedName("total_amount")
     @Expose
-    private Integer totalAmount;
+    private Double totalAmount;
     @SerializedName("paid_amount")
     @Expose
-    private Integer paidAmount;
+    private Double paidAmount;
     @SerializedName("due_amount")
     @Expose
-    private Integer dueAmount;
+    private Double dueAmount;
+    @SerializedName("payment_status")
+    @Expose
+    private String paymentStatus;
+    @SerializedName("payment_mode")
+    @Expose
+    private String paymentMode;
     @SerializedName("notes")
     @Expose
     private String notes;
+    @SerializedName("is_cancelled")
+    @Expose
+    private Boolean isCancelled;
+    @SerializedName("is_deleted")
+    @Expose
+    private Boolean isDeleted;
+    @SerializedName("created_by")
+    @Expose
+    private Integer createdBy;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
+    @SerializedName("customer")
+    @Expose
+    private GetCustomerDataModel customer;
     @SerializedName("items")
     @Expose
     private List<BillingItem> items;
+    @SerializedName("payments")
+    @Expose
+    private List<InvoicePayment> payments;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public GetBillingDataModel() {
-    }
-
-    public GetBillingDataModel(Integer id, String invoiceNo, Integer customerId, GetCustomerDataModel customer, String invoiceDate, String status,
-                               Integer subtotal, Integer discountAmount, Integer taxAmount, Integer totalAmount,
-                               Integer paidAmount, Integer dueAmount, String notes, List<BillingItem> items) {
-        super();
-        this.id = id;
-        this.invoiceNo = invoiceNo;
-        this.customerId = customerId;
-        this.customer = customer;
-        this.invoiceDate = invoiceDate;
-        this.status = status;
-        this.subtotal = subtotal;
-        this.discountAmount = discountAmount;
-        this.taxAmount = taxAmount;
-        this.totalAmount = totalAmount;
-        this.paidAmount = paidAmount;
-        this.dueAmount = dueAmount;
-        this.notes = notes;
-        this.items = items;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getInvoiceNo() {
-        return invoiceNo;
-    }
-
-    public void setInvoiceNo(String invoiceNo) {
-        this.invoiceNo = invoiceNo;
-    }
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-
-    public GetCustomerDataModel getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(GetCustomerDataModel customer) {
-        this.customer = customer;
-    }
-
-    public String getInvoiceDate() {
-        return invoiceDate;
-    }
-
-    public void setInvoiceDate(String invoiceDate) {
-        this.invoiceDate = invoiceDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Integer getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(Integer subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    public Integer getDiscountAmount() {
-        return discountAmount;
-    }
-
-    public void setDiscountAmount(Integer discountAmount) {
-        this.discountAmount = discountAmount;
-    }
-
-    public Integer getTaxAmount() {
-        return taxAmount;
-    }
-
-    public void setTaxAmount(Integer taxAmount) {
-        this.taxAmount = taxAmount;
-    }
-
-    public Integer getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(Integer totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public Integer getPaidAmount() {
-        return paidAmount;
-    }
-
-    public void setPaidAmount(Integer paidAmount) {
-        this.paidAmount = paidAmount;
-    }
-
-    public Integer getDueAmount() {
-        return dueAmount;
-    }
-
-    public void setDueAmount(Integer dueAmount) {
-        this.dueAmount = dueAmount;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public List<BillingItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<BillingItem> items) {
-        this.items = items;
-    }
-
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public Integer getStoreId() { return storeId; }
+    public void setStoreId(Integer storeId) { this.storeId = storeId; }
+    public Integer getCustomerId() { return customerId; }
+    public void setCustomerId(Integer customerId) { this.customerId = customerId; }
+    public String getInvoiceNo() { return invoiceNo; }
+    public void setInvoiceNo(String invoiceNo) { this.invoiceNo = invoiceNo; }
+    public String getInvoiceDate() { return invoiceDate; }
+    public void setInvoiceDate(String invoiceDate) { this.invoiceDate = invoiceDate; }
+    public Double getSubtotal() { return subtotal; }
+    public void setSubtotal(Double subtotal) { this.subtotal = subtotal; }
+    public Double getDiscountAmount() { return discountAmount; }
+    public void setDiscountAmount(Double discountAmount) { this.discountAmount = discountAmount; }
+    public Double getTaxAmount() { return taxAmount; }
+    public void setTaxAmount(Double taxAmount) { this.taxAmount = taxAmount; }
+    public Double getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(Double totalAmount) { this.totalAmount = totalAmount; }
+    public Double getPaidAmount() { return paidAmount; }
+    public void setPaidAmount(Double paidAmount) { this.paidAmount = paidAmount; }
+    public Double getDueAmount() { return dueAmount; }
+    public void setDueAmount(Double dueAmount) { this.dueAmount = dueAmount; }
+    public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public String getPaymentMode() { return paymentMode; }
+    public void setPaymentMode(String paymentMode) { this.paymentMode = paymentMode; }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
+    public Boolean getIsCancelled() { return isCancelled; }
+    public void setIsCancelled(Boolean isCancelled) { this.isCancelled = isCancelled; }
+    public Boolean getIsDeleted() { return isDeleted; }
+    public void setIsDeleted(Boolean isDeleted) { this.isDeleted = isDeleted; }
+    public Integer getCreatedBy() { return createdBy; }
+    public void setCreatedBy(Integer createdBy) { this.createdBy = createdBy; }
+    public String getCreatedAt() { return createdAt; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public String getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+    public GetCustomerDataModel getCustomer() { return customer; }
+    public void setCustomer(GetCustomerDataModel customer) { this.customer = customer; }
+    public List<BillingItem> getItems() { return items; }
+    public void setItems(List<BillingItem> items) { this.items = items; }
+    public List<InvoicePayment> getPayments() { return payments; }
+    public void setPayments(List<InvoicePayment> payments) { this.payments = payments; }
 }

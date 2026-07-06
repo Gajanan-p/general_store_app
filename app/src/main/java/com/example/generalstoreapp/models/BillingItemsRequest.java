@@ -4,65 +4,40 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class BillingItemsRequest {
-
     @SerializedName("product_id")
     @Expose
     private Integer productId;
-    @SerializedName("qty")
+    @SerializedName("quantity")
     @Expose
-    private Integer qty;
-    @SerializedName("sell_price")
+    private Double quantity;
+    @SerializedName("rate")
     @Expose
-    private Integer sellPrice;
-    @SerializedName("gst_percent")
+    private Double rate;
+    @SerializedName("discount_amount")
     @Expose
-    private Integer gstPercent;
+    private Double discountAmount;
+    @SerializedName("tax_amount")
+    @Expose
+    private Double taxAmount;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public BillingItemsRequest() {
-    }
+    public BillingItemsRequest() {}
 
-    public BillingItemsRequest(Integer productId, Integer qty, Integer sellPrice, Integer gstPercent) {
-        super();
+    public BillingItemsRequest(Integer productId, Double quantity, Double rate, Double discountAmount, Double taxAmount) {
         this.productId = productId;
-        this.qty = qty;
-        this.sellPrice = sellPrice;
-        this.gstPercent = gstPercent;
+        this.quantity = quantity;
+        this.rate = rate;
+        this.discountAmount = discountAmount;
+        this.taxAmount = taxAmount;
     }
 
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
-
-    public Integer getQty() {
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
-    }
-
-    public Integer getSellPrice() {
-        return sellPrice;
-    }
-
-    public void setSellPrice(Integer sellPrice) {
-        this.sellPrice = sellPrice;
-    }
-
-    public Integer getGstPercent() {
-        return gstPercent;
-    }
-
-    public void setGstPercent(Integer gstPercent) {
-        this.gstPercent = gstPercent;
-    }
-
+    public Integer getProductId() { return productId; }
+    public void setProductId(Integer productId) { this.productId = productId; }
+    public Double getQuantity() { return quantity; }
+    public void setQuantity(Double quantity) { this.quantity = quantity; }
+    public Double getRate() { return rate; }
+    public void setRate(Double rate) { this.rate = rate; }
+    public Double getDiscountAmount() { return discountAmount; }
+    public void setDiscountAmount(Double discountAmount) { this.discountAmount = discountAmount; }
+    public Double getTaxAmount() { return taxAmount; }
+    public void setTaxAmount(Double taxAmount) { this.taxAmount = taxAmount; }
 }

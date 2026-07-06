@@ -329,12 +329,12 @@ public class BillingFragment extends Fragment implements View.OnClickListener, B
             
             try {
                 String balanceStr = editBalance.getText().toString().trim();
-                request.setOpeningBalance(balanceStr.isEmpty() ? 0 : Integer.parseInt(balanceStr));
+                request.setOpeningBalance(balanceStr.isEmpty() ? 0.0 : Double.parseDouble(balanceStr));
             } catch (NumberFormatException e) {
-                request.setOpeningBalance(0);
+                request.setOpeningBalance(0.0);
             }
             
-            request.setIsActive(switchActive.isChecked() ? 1 : 0);
+            request.setIsActive(switchActive.isChecked());
 
             viewModel.addCustomerAndSelect(request);
             dialog.dismiss();
